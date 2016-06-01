@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+    <title>Ivis-Assignment</title>
+    <link rel="stylesheet" href="libs/css/bootstrap.min.css">
+        <link rel="stylesheet" href="libs/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="libs/css/jquery-ui-1.10.3.custom.css">
+        <link rel="stylesheet" href="libs/css/jquery.fancybox-1.3.4.css">
+        <link rel="stylesheet" href="libs/css/cytoscape.js-panzoom.css">
+        <link href="libs/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="libs/css/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+        <link href="libs/css/my-style.css" rel="stylesheet" type="text/css" />
+
+
+        <style type="text/css">
+                .menu-container{
+                    border: 1px solid #ddd;
+                    border-radius: 0.25em;
+                    margin: auto;
+                    height: 40px;
+                    width: 1000px;
+                }
+                #cy {
+                    margin: auto;
+                    border: 1px solid #ddd;
+                    height: 680px;
+                    width: 1000px;
+                    overflow: auto !important;
+                    border-radius: 0.25em;
+                }
+                #break {
+                    margin: auto;
+                    height: 40px;
+                    width: 1000px;
+                }
+                .selected {
+                }
+            </style>
+            </head>
+            <body>
+                <nav id="myNavbar" class="navbar navbar-default my-nav-bar" role="navigation">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="container">
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">File <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a id="new" href="#">New</a> </li>
+                                        <li><input id="file-input" type="file" style="display:none" />
+                                            <a href="#" type="file" id="load-file">Load ...</a></li>
+                                        <li>
+                                            <a id="save-file" href="#">Save</a></li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a id="save-as-png" href="#">Save as PNG</a>
+                                        </li>
+                                    </ul>
+                                <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Edit <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a id="addNode" href="#">Add Node ...</a></li>
+                                    <li><a id="makeCompound" href="#">Add Compound For Selected</a></li>
+                                    <li><a id="addEdge" href="#">Add Edge Between Selected</a></li>
+                                    <li class="divider"></li>
+                                    <li><a id="delete" href="#">Delete Selected</a></li>
+                                </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Layout <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown">
+                                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Style
+                                            <b class="right-caret"></b>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a id="cose2" href="#">CoSE2</a></li>
+                                                <li><a id="cose" href="#">CoSE</a></li>
+                                                <li><a id="cola" href="#">Cola</a></li>
+                                                <li><a id="springy" href="#">Springy</a></li>
+                                                <li><a id="arbor" href="#">Arbor</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a id = "perform-layout" href="#">Perform Layout</a></li>
+                                        <li><a id = "layout-properties" href="#">Layout Properties</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div><!-- /.navbar-collapse -->
+                </nav>
+            <div id="info-content">
+                <table width="100%" height="100%" align="center" valign="center">
+                    <tr>
+                        <td>
+                            <span class="input-file" id="file-name"></span>
+                        </td>
+                        <td>
+                            <span class="label">Cytoscape.js<i>_LayoutDemo</i></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="cy"></div>
+            <div id="add-node-dialog" title="Add Node" style="display: none">
+                <span class="ui-state-default">
+                        <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 0 0;">
+                        </span>
+                    </span>
+                <table>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Name </span>
+                        </td>
+                        <td>
+                            <input id="new-node-name" type="text" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Width </span>
+                        </td>
+                        <td>
+                            <input id="new-node-width" type="text" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Height </span>
+                        </td>
+                        <td>
+                            <input id="new-node-height" type="text" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Border Width </span>
+                        </td>
+                        <td>
+                            <input id="new-node-border-width" type="text" value="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Border Color </span>
+                        </td>
+                        <td>
+                            <input id="new-node-border-color" type="color" value="#000000"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> X </span>
+                        </td>
+                        <td>
+                            <input id="new-node-x" type="text" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Y </span>
+                        </td>
+                        <td>
+                            <input id="new-node-y" type="text" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Color </span>
+                        </td>
+                        <td>
+                            <input id="new-node-color" type="color" value="#ffffff"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Shape </span>
+                        </td>
+                        <td>
+                            <select id="new-node-shape">
+                                <option value="rectangle">Rectangle</option>
+                                <option value="triangle">Triangle</option>
+                                <option value="ellipse">Ellipse</option>
+                                <option value="roundrectangle">Round Rectangle</option>
+                                <option value="pentagon">Pentagon</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="cose2-layout-table" title="CoSE2 Properties">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <div id="cose-layout-table" title="CoSE Properties">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <div id="cola-layout-table" title="Cola Properties">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <div id="springy-layout-table" title="Springy Properties">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <div id="arbor-layout-table" title="Arbor Properties">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <div id="ADDNode" title="Add Node">
+                <!-- sbgn layout table will be shown here -->
+            </div>
+            <script type="text/template" id="noty-info">
+                Right click to a node to see its detailed information
+            </script>
+            <script type="text/template" id="cose2-settings-template">
+                <table class="table-condensed layout-table">
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Node Repulsion </span>
+                        </td>
+                        <td>
+                            <input id="node-repulsion4" type="text" class="input-small layout-text" value= <%= nodeRepulsion %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Node Overlap </span>
+                        </td>
+                        <td>
+                            <input id="node-overlap4" type="text" class="input-small layout-text" value= <%= nodeOverlap %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Ideal Edge Length </span>
+                        </td>
+                        <td>
+                            <input id="ideal-edge-length4" type="text" class="input-small layout-text" value= <%= idealEdgeLength %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Edge Elasticity </span>
+                        </td>
+                        <td>
+                            <input id="edge-elasticity4" type="text" class="input-small layout-text" value= <%= edgeElasticity %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Nesting Factor </span>
+                        </td>
+                        <td>
+                            <input id="nesting-factor4" type="text" class="input-small layout-text" value= <%= nestingFactor %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Gravity </span>
+                        </td>
+                        <td>
+                            <input id="gravity4" type="text" class="input-small layout-text" value= <%= gravity %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Number of Iterations </span>
+                        </td>
+                        <td>
+                            <input id="num-iter4" type="text" class="input-small layout-text" value= <%= numIter %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Animate </span>
+                        </td>
+                        <td>
+                            <input id="animate4" type="checkbox" class="input-small layour-text" <% if(animate){%> checked <%} %>>
+                        </td>
+                    </tr><tr>
+                        <td>
+                            <span class="add-on layout-text"> Tile </span>
+                        </td>
+                        <td>
+                            <input id="tile4" type="checkbox" class="input-small layour-text" <% if(tile){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Incremental </span>
+                        </td>
+                        <td>
+                            <input id="incremental4" type="checkbox" class="input-small layour-text" <% if(incremental){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Refresh </span>
+                        </td>
+                        <td>
+                            <input id="refresh4" type="text" class="input-small layout-text" value= <%= refresh %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Fit </span>
+                        </td>
+                        <td>
+                            <input id="fit4" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Padding </span>
+                        </td>
+                        <td>
+                            <input id="padding4" type="text" class="input-small layout-text" value= <%= padding %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Debug </span>
+                        </td>
+                        <td>
+                            <input id="debug4" type="checkbox" class="input-small layout-text" <% if(debug){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Initial Temp. </span>
+                        </td>
+                        <td>
+                            <input id="initialTemp4" type="text" class="input-small layout-text" value= <%= initialTemp%>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Minimum Temp. </span>
+                        </td>
+                        <td>
+                            <input id="minTemp4" type="text" class="input-small layout-text" value= <%= minTemp%>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Cooling Factor </span>
+                        </td>
+                        <td>
+                            <input id="coolingFactor4" type="text" class="input-small layout-text" value= <%= coolingFactor%>>
+                        </td>
+                    </tr>
+                    <tr id="layout-buttons">
+                        <td>
+                            <button id="save-layout4" class="btn btn-default" >Save</button>
+                        </td>
+                        <td>
+                            <button id="default-layout4" class="btn btn-default">Default</button>
+                        </td>
+                    </tr>
+                </table>
+            </script>
+            <script type="text/template" id="cose-settings-template">
+                <table class="table-condensed layout-table">
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Node Repulsion </span>
+                        </td>
+                        <td>
+                            <input id="node-repulsion" type="text" class="input-small layout-text" value= <%= nodeRepulsion %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Node Overlap </span>
+                        </td>
+                        <td>
+                            <input id="node-overlap" type="text" class="input-small layout-text" value= <%= nodeOverlap %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Ideal Edge Length </span>
+                        </td>
+                        <td>
+                            <input id="ideal-edge-length" type="text" class="input-small layout-text" value= <%= idealEdgeLength %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Edge Elasticity </span>
+                        </td>
+                        <td>
+                            <input id="edge-elasticity" type="text" class="input-small layout-text" value= <%= edgeElasticity %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Nesting Factor </span>
+                        </td>
+                        <td>
+                            <input id="nesting-factor" type="text" class="input-small layout-text" value= <%= nestingFactor %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Gravity </span>
+                        </td>
+                        <td>
+                            <input id="gravity" type="text" class="input-small layout-text" value= <%= gravity %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Number of Iterations </span>
+                        </td>
+                        <td>
+                            <input id="num-iter" type="text" class="input-small layout-text" value= <%= numIter %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Animate </span>
+                        </td>
+                        <td>
+                            <input id="animate" type="checkbox" class="input-small layour-text" <% if(animate){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Refresh </span>
+                        </td>
+                        <td>
+                            <input id="refresh" type="text" class="input-small layout-text" value= <%= refresh %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Fit </span>
+                        </td>
+                        <td>
+                            <input id="fit" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Padding </span>
+                        </td>
+                        <td>
+                            <input id="padding" type="text" class="input-small layout-text" value= <%= padding %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Randomize </span>
+                        </td>
+                        <td>
+                            <input id="randomize" type="checkbox" class="input-small layout-text" <% if(randomize){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Debug </span>
+                        </td>
+                        <td>
+                            <input id="debug" type="checkbox" class="input-small layout-text" <% if(debug){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Initial Temp. </span>
+                        </td>
+                        <td>
+                            <input id="initialTemp" type="text" class="input-small layout-text" value= <%= initialTemp%>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Minimum Temp. </span>
+                        </td>
+                        <td>
+                            <input id="minTemp" type="text" class="input-small layout-text" value= <%= minTemp%>>
+                        </td>
+                    </tr>
+                    <tr id="layout-buttons">
+                        <td>
+                            <button id="save-layout" class="btn btn-default" >Save</button>
+                        </td>
+                        <td>
+                            <button id="default-layout" class="btn btn-default">Default</button>
+                        </td>
+                    </tr>
+                </table>
+            </script>
+            <script type="text/template" id="cola-settings-template">
+                <table class="table-condensed layout-table">
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Animate </span>
+                        </td>
+                        <td>
+                            <input id="animate1" type="checkbox" class="input-small layout-text" <% if(animate){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Refresh </span>
+                        </td>
+                        <td>
+                            <input id="refresh1" type="text" class="input-small layout-text" value= <%= refresh %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Max. Simulation Time </span>
+                        </td>
+                        <td>
+                            <input id="maxSimulationTime1" type="text" class="input-small layout-text" value= <%= maxSimulationTime %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Ungrabify While Simulating </span>
+                        </td>
+                        <td>
+                            <input id="ungrabifyWhileSimulating1" type="checkbox" class="input-small layout-text" <% if(ungrabifyWhileSimulating){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Fit </span>
+                        </td>
+                        <td>
+                            <input id="fit1" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Padding </span>
+                        </td>
+                        <td>
+                            <input id="padding1" type="text" class="input-small layout-text" value= <%= padding %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Randomize </span>
+                        </td>
+                        <td>
+                            <input id="randomize1" type="checkbox" class="input-small layout-text" <% if(randomize){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Avoid overlap </span>
+                        </td>
+                        <td>
+                            <input id="avoidOverlap1" type="checkbox" class="input-small layour-text" <% if(avoidOverlap){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Handle Disconnected</span>
+                        </td>
+                        <td>
+                            <input id="handleDisconnected1" type="checkbox" class="input-small layout-text" <% if(handleDisconnected){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Infinite </span>
+                        </td>
+                        <td>
+                            <input id="infinite1" type="checkbox" class="input-small layout-text" <% if(infinite){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr id="layout-buttons">
+                        <td>
+                            <button id="save-layout1" class="btn btn-default" >Save</button>
+                        </td>
+                        <td>
+                            <button id="default-layout1" class="btn btn-default">Default</button>
+                        </td>
+                    </tr>
+                </table>
+            </script>
+            <script type="text/template" id="arbor-settings-template">
+                <table class="table-condensed layout-table">
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Animate </span>
+                        </td>
+                        <td>
+                            <input id="animate2" type="checkbox" class="input-small layout-text" <% if(animate){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Max. Simulation Time </span>
+                        </td>
+                        <td>
+                            <input id="maxSimulationTime2" type="text" class="input-small layout-text" value= <%= maxSimulationTime %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Fit </span>
+                        </td>
+                        <td>
+                            <input id="fit2" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Padding </span>
+                        </td>
+                        <td>
+                            <input id="padding2" type="text" class="input-small layout-text" value= <%= padding %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Ungrabify While Simulating </span>
+                        </td>
+                        <td>
+                            <input id="ungrabifyWhileSimulating2" type="checkbox" class="input-small layout-text" <% if(ungrabifyWhileSimulating){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+
+
+
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Gravity </span>
+                        </td>
+                        <td>
+                            <input id="gravity2" type="checkbox" class="input-small layout-text" <% if(gravity){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Step Size </span>
+                        </td>
+                        <td>
+                            <input id="stepSize2" type="text" class="input-small layour-text" value=<%=stepSize%>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Infinite </span>
+                        </td>
+                        <td>
+                            <input id="infinite2" type="checkbox" class="input-small layout-text" <% if(infinite){%> checked <%} %> >
+                        </td>
+                    </tr>
+                    <tr id="layout-buttons">
+                        <td>
+                            <button id="save-layout2" class="btn btn-default" >Save</button>
+                        </td>
+                        <td>
+                            <button id="default-layout2" class="btn btn-default">Default</button>
+                        </td>
+                    </tr>
+                </table>
+            </script>
+            <script type="text/template" id="springy-settings-template">
+                <table class="table-condensed layout-table">
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Animate </span>
+                        </td>
+                        <td>
+                            <input id="animate3" type="checkbox" class="input-small layout-text" <% if(animate){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Max. Simulation Time </span>
+                        </td>
+                        <td>
+                            <input id="maxSimulationTime3" type="text" class="input-small layout-text" value= <%= maxSimulationTime %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Ungrabify While Simulating </span>
+                        </td>
+                        <td>
+                            <input id="ungrabifyWhileSimulating3" type="checkbox" class="input-small layout-text" <% if(ungrabifyWhileSimulating){%> checked <%} %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Fit </span>
+                        </td>
+                        <td>
+                            <input id="fit3" type="checkbox" class="input-small layout-text" <% if(fit){%> checked <%} %>>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Padding </span>
+                        </td>
+                        <td>
+                            <input id="padding3" type="text" class="input-small layout-text" value= <%= padding %> >
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Random </span>
+                        </td>
+                        <td>
+                            <input id="random3" type="checkbox" class="input-small layout-text" <% if(random){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Infinite </span>
+                        </td>
+                        <td>
+                            <input id="infinite3" type="checkbox" class="input-small layout-text" <% if(infinite){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Stiffness </span>
+                        </td>
+                        <td>
+                            <input id="stiffness3" type="checkbox" class="input-small layour-text" <% if(stiffness){%> checked <%} %>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Repulsion </span>
+                        </td>
+                        <td>
+                            <input id="repulsion3" type="text" class="input-small layout-text" value= <%= repulsion %> >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="add-on layout-text"> Damping </span>
+                        </td>
+                        <td>
+                            <input id="damping3" type="text" class="input-small layout-text" value= <%= damping %> >
+                        </td>
+                    </tr>
+                    <tr id="layout-buttons3">
+                        <td>
+                            <button id="save-layout3" class="btn btn-default" >Save</button>
+                        </td>
+                        <td>
+                            <button id="default-layout3" class="btn btn-default">Default</button>
+                        </td>
+                    </tr>
+                </table>
+            </script>
+            <script src ="libs/js/jquery-1.8.2.min.js"></script>
+            <script src="libs/js/jquery.fancybox-1.3.4.pack.js"></script>
+            <script src="libs/js/jquery.expander-min.js"></script>
+            <script src="libs/js/jquery.qtip.min.js"></script>
+            <script src="libs/js/cytoscape.min.js"></script>
+            <script src="libs/js/cytoscape.js-panzoom.js"></script>
+            <script src="libs/js/bootstrap.min.js"></script>
+            <script src="libs/js/jquery-ui-1.10.3.custom.min.js"></script>
+            <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
+            <script src="libs/js/arbor.js"></script>
+            <script src="libs/js/springy.js"></script>
+            <script src="libs/js/layout.cose2.js"></script>
+            <script src="libs/js/underscore.js"></script>
+            <script src="libs/js/jquery.noty.packaged.min.js"></script>
+
+            <script src="libs/js/backbone-min.js"></script>
+            <script src="js/IDGenerator.js"></script>
+            <script src="js/Layouts.js"></script>
+            <script src="js/json-to-graphml-converter.js"></script>
+            <script src="js/graphml-to-json-converter.js"></script>
+
+            <script src="js/sample-app-menu-functions.js"></script>
+            <script src="libs/js/FileSaver.js"></script>
+
+            </body>
+</html>
