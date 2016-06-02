@@ -67,7 +67,7 @@
   $.extend(arbor, {
     // not really user-serviceable; use the ParticleSystem’s .tween* methods instead
     Tween:Tween,
-    
+
     // immutable object with useful methods
     colors:{
       CSS:Colors.CSS,           // dictionary: {colorname:#fef2e2,...}
@@ -77,7 +77,7 @@
       blend:Colors.blend        // ƒ(color, opacity) -> rgbaString
     }
   })
-  
+
 })(this.jQuery)
 
 
