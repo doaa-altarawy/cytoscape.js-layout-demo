@@ -17,8 +17,8 @@ var refreshUndoRedoButtonsStatus = function(){
 
 ////////////// KEYBOARD EVENTS ///////////////////////
 
-// Undo / Redo from keyboard
 $(document).keydown(function (e) {
+// Undo / Redo from keyboard
     if (e.ctrlKey) {
         window.ctrlKeyDown = true;
         if (e.which === 90) {
@@ -30,6 +30,10 @@ $(document).keydown(function (e) {
             editorActionsManager.redo();
             refreshUndoRedoButtonsStatus();
         }
+    }
+// Delete selected
+    if(e.which === 46) {
+        $("#delete").click();
     }
 });
 
@@ -362,66 +366,11 @@ var deleteNode = function(theNode){
 };
 $("#makeCompound").click(function (e) {
     var nodes = cy.$('node:selected');
-    var nodesToAdd = [];
-    var par = null;
-    if (nodes[0]._private.data.parent != null)
-        par = nodes[0]._private.data.parent;
-    for (var i = 0; i < nodes.length; i++) {
-        nodesToAdd[i] = new Object();
-        if (nodes[i]._private.data.parent != null && nodes[i]._private.data.parent != par){
-            return;
-        }
-    }
-    var num = nodes.length;
-    var pNode = new Object();
-    pNode['data'] = {id: IDGenerator.generate()};
-    pNode['group'] = 'nodes';
-    pNode.position = new Object();
 
-    if (par != null){
-        pNode['data'].parent = par;
-    }
-
-    var xs = 0;
-    var ys = 0;
-    var edges = cy.edges();
-    var selEdges = cy.$("edge:selected");
-    for (var i = 0; i < selEdges.length; i++){
-        selEdges[i].unselect();
-    }
-    for (var i = 0; i < nodes.length; i++) {
-        nodes[i].unselect();
-        nodesToAdd[i].group = 'nodes';
-        nodesToAdd[i].data = {id: nodes[i]._private.data.id, parent: pNode.data['id']};
-        nodesToAdd[i].position = {x: nodes[i].position('x'), y: nodes[i].position('y')};
-        nodesToAdd[i].css = new Object();
-        nodesToAdd[i].css['shape'] = nodes[i].css("shape");
-        nodesToAdd[i].css['background-color'] = nodes[i].css("background-color");
-        nodesToAdd[i].css['content'] = nodes[i].css("content");
-        nodesToAdd[i].css['text-valign'] = nodes[i].css("text-valign");
-   //     nodesToAdd[i].css['text-outline-color'] = nodes[i].css("text-outline-color");
-        nodesToAdd[i].css['text-outline-width'] = nodes[i].css("text-outline-width");
-        nodesToAdd[i].css['width'] = nodes[i].css('width');
-        nodesToAdd[i].css['height'] = nodes[i].css('height');
-//        nodesToAdd[i].css['border-width'] = nodes[i]._private.style['border-width'].value;
-        if (nodes[i].isParent()){
-            addChild(nodesToAdd, nodes[i]);
-        }
-
-        xs += nodes[i].position('x');
-        ys += nodes[i].position('y');
-        cy.remove(nodes[i]);
-    }
-    cy.remove('edge');
-    pNode['position'] = {x: xs / num, y: ys / num};
-    cy.add(pNode);
-    for (var i = 0; i < nodesToAdd.length; i++){
-        cy.add(nodesToAdd[i]);
-    }
-    cy.add(edges);
-    cy.layout({
-        name: 'preset'
-    })
+    editorActionsManager._do(new CreateCompundForSelectedNodesCommand({
+        nodesToMakeCompound: nodes,
+        firstTime: true
+    }));
 });
 $("#layout-properties").click(function (e) {
     if (tempName !== '') {
