@@ -67,7 +67,7 @@ var addRemoveUtilities = {
   },
 
   addEdgeSelected: function(source, target) {
-
+  console.log(source + target)
     if (cy.$("node:selected").length !=  2)
       return;
 
@@ -78,6 +78,7 @@ var addRemoveUtilities = {
         target: target
       }
     });
+    
     return edge;
   },
   
@@ -112,6 +113,7 @@ var addRemoveUtilities = {
     return edges.remove();
   },
   restoreEles: function (eles) {
+    console.log(eles);
     eles.restore();
     return eles;
   },

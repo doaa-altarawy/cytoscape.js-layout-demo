@@ -33,8 +33,12 @@ function restoreEles(eles)
 }
 
 function addEdgeSelected(param){
-  var newEdge = param;
-  return addRemoveUtilities.addEdgeSelected(newEdge.source, newEdge.target);
+    var result;
+    if(param.firstTime)
+        result = addRemoveUtilities.addEdgeSelected(param.source, param.target);
+    else
+        result = addRemoveUtilities.restoreEles(param);
+    return result;
 }
 
 function addEdge(param)

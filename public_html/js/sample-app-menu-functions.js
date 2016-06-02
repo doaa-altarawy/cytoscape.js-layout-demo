@@ -61,7 +61,8 @@ $("#addEdge").click(function (e) {
 
    editorActionsManager._do(new AddEdgeSelectedCommand({
        source: cy.$("node:selected")[0].data('id'),
-       target: cy.$("node:selected")[1].data('id')
+       target: cy.$("node:selected")[1].data('id'),
+       firstTime: true
    }));
     
     refreshUndoRedoButtonsStatus();
