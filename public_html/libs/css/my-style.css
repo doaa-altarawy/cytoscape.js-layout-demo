@@ -1,3 +1,13 @@
+i.shortcut {
+    font-size: 8px;
+    color: #ddd;
+    float: right;
+    padding: 10px 15px 0 0;
+}
+.dropdown-menu li a{
+    display: inline-block;
+    float: left;
+}
 .right-caret {
     border-bottom: 4px solid transparent;
     border-top: 4px solid transparent;
