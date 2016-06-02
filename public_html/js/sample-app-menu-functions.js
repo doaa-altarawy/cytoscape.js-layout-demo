@@ -15,6 +15,8 @@ var refreshUndoRedoButtonsStatus = function(){
     }
 }
 
+
+
 ////////////// KEYBOARD EVENTS ///////////////////////
 
 $(document).keydown(function (e) {

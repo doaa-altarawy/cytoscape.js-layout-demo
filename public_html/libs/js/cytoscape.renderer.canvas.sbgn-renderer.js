@@ -4226,6 +4226,69 @@
 
   var arrowShapes = CanvasRenderer.arrowShapes;
 
+  $$.sbgn.drawExpandCollapseBoxes = function (node, context) {
+    var children = node.children();
+    var collapsedChildren = node._private.data.collapsedChildren;
+    var hasChildren = children != null && children.length > 0;
+    //check if the expand or collapse box is to be drawn
+    if (!hasChildren && collapsedChildren == null) {
+      return;
+    }
+
+    //If the compound node has no expanded-collapsed data property make it expanded
+    if (node.data()['expanded-collapsed'] == null) {
+      node.data('expanded-collapsed', 'expanded');
+    }
+
+    var expandedOrcollapsed = node.data('expanded-collapsed');
+
+    //expand or collapse boxes are to be drawn if the mouse is over the node or the node is collapsed
+    if (!node.mouseover && expandedOrcollapsed == 'expanded') {
+      return;
+    }
+
+    //Draw expand-collapse rectangles
+    var rectSize = 12;
+    var lineSize = 8;
+    var startOffset = 5;
+    var diff = (rectSize - lineSize) / 2;
+    var width = hasChildren ? node.outerWidth() : node.width();
+    var height = hasChildren ? node.outerHeight() : node.height();
+    node._private.data.expandcollapseStartX = node._private.position.x - width / 2 + startOffset;
+    node._private.data.expandcollapseStartY = node._private.position.y - height / 2 + startOffset;
+    node._private.data.expandcollapseEndX = node._private.data.expandcollapseStartX + rectSize;
+    node._private.data.expandcollapseEndY = node._private.data.expandcollapseStartY + rectSize;
+
+    var oldStyle = context.fillStyle;
+
+    context.fillStyle = "black";
+
+    context.fillRect(
+        node._private.data.expandcollapseStartX,
+        node._private.data.expandcollapseStartY,
+        rectSize,
+        rectSize);
+
+    context.fillStyle = oldStyle;
+
+    oldStyle = context.strokeStyle;
+
+    context.stroke();
+    context.beginPath();
+    context.strokeStyle = "white";
+
+    context.moveTo(node._private.data.expandcollapseStartX + diff, node._private.data.expandcollapseStartY + rectSize / 2);
+    context.lineTo(node._private.data.expandcollapseStartX + lineSize + diff, node._private.data.expandcollapseStartY + +rectSize / 2);
+
+    if (expandedOrcollapsed == 'collapsed') {
+      context.moveTo(node._private.data.expandcollapseStartX + rectSize / 2, node._private.data.expandcollapseStartY + diff);
+      context.lineTo(node._private.data.expandcollapseStartX + rectSize / 2, node._private.data.expandcollapseStartY + lineSize + diff);
+    }
+
+    context.stroke();
+    context.strokeStyle = oldStyle;
+  };
+
   var bbCollide = function (x, y, centerX, centerY, width, height, direction, padding) {
     var x1 = centerX - width / 2;
     var x2 = centerX + width / 2;
