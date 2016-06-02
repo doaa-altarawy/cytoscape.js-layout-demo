@@ -94,7 +94,7 @@ var expandCollapseUtilities = {
     
     var expandedStack = this.simpleExpandAllNodes(nodes, selector, true);
 
-    triggerIncrementalLayout();
+    //triggerIncrementalLayout();
 
     /*
      * return the nodes to undo the operation
