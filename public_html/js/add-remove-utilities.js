@@ -66,7 +66,7 @@ var addRemoveUtilities = {
     return removedEles;
   },
 
-  addEdgeSelected: function() {
+  addEdgeSelected: function(source, target) {
 
     if (cy.$("node:selected").length !=  2)
       return;
@@ -74,8 +74,8 @@ var addRemoveUtilities = {
     var edge = cy.add({
       group: "edges",
       data: {
-        source: cy.$("node:selected")[0].data('id'),
-        target: cy.$("node:selected")[1].data('id')
+        source: source,
+        target: target
       }
     });
     return edge;

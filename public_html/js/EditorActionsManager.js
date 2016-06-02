@@ -33,8 +33,8 @@ function restoreEles(eles)
 }
 
 function addEdgeSelected(param){
-
-  return addRemoveUtilities.addEdgeSelected();
+  var newEdge = param;
+  return addRemoveUtilities.addEdgeSelected(newEdge.source, newEdge.target);
 }
 
 function addEdge(param)
@@ -231,9 +231,9 @@ function simpleExpandAllNodes(param) {
   };
   result.nodesData = getNodePositionsAndSizes();
   result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
-  if (!param.firstTime) {
+ /* if (!param.firstTime) {
       returnToPositionsAndSizes(param.nodesData);
-    }
+    }*/
   return result;
 
 }

@@ -1,5 +1,3 @@
-///////////////////// EDIT ////////////////////////////
-
 var refreshUndoRedoButtonsStatus = function(){
 
     if (editorActionsManager.isUndoStackEmpty()) {
@@ -16,6 +14,27 @@ var refreshUndoRedoButtonsStatus = function(){
         $("#redo").parent("li").removeClass("disabled");
     }
 }
+
+////////////// KEYBOARD EVENTS ///////////////////////
+
+// Undo / Redo from keyboard
+$(document).keydown(function (e) {
+    if (e.ctrlKey) {
+        window.ctrlKeyDown = true;
+        if (e.which === 90) {
+            editorActionsManager.undo();
+            refreshUndoRedoButtonsStatus();
+//    $(document.activeElement).attr("value");
+        }
+        else if (e.which === 89) {
+            editorActionsManager.redo();
+            refreshUndoRedoButtonsStatus();
+        }
+    }
+});
+
+
+///////////////////// EDIT ////////////////////////////
 
 $("#undo").click(function (e) {
     editorActionsManager.undo();
@@ -39,7 +58,12 @@ $("#delete").click(function (e) {
 });
 
 $("#addEdge").click(function (e) {
-   editorActionsManager._do(new AddEdgeSelectedCommand());
+
+   editorActionsManager._do(new AddEdgeSelectedCommand({
+       source: cy.$("node:selected")[0].data('id'),
+       target: cy.$("node:selected")[1].data('id')
+   }));
+    
     refreshUndoRedoButtonsStatus();
 });
 
