@@ -136,17 +136,7 @@ $("#collapse-all").click(function (e) {
     if (!thereIs) {
         return;
     }
-/*
-    if (window.rearrangeAfterExpandCollapse == null) {
-        window.rearrangeAfterExpandCollapse =
-            (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
-    }
-    if (rearrangeAfterExpandCollapse)
-        editorActionsManager._do(new CollapseGivenNodesCommand({
-            nodes: cy.nodes(),
-            firstTime: true
-        }));
-    else*/
+
     editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes()));
     refreshUndoRedoButtonsStatus();
 });
@@ -157,17 +147,10 @@ $("#expand-all").click(function (e) {
     if (!thereIs) {
         return;
     }
-/*
-    if (window.rearrangeAfterExpandCollapse == null) {
-        window.rearrangeAfterExpandCollapse =
-            (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
-    }
-    if (rearrangeAfterExpandCollapse)
-        editorActionsManager._do(new ExpandAllNodesCommand({
-            firstTime: true
-        }));
-    else*/
-    editorActionsManager._do(new SimpleExpandAllNodesCommand());
+
+    editorActionsManager._do(new SimpleExpandAllNodesCommand({
+        firstTime: true
+    }));
     refreshUndoRedoButtonsStatus();
 });
 
@@ -234,7 +217,7 @@ var springyLayoutProp = new SPRINGYLayout({
     el: '#springy-layout-table'
 });
 $("#add-node-dialog").hide();
-$("#addNode").click(function () {
+$("#addNodeMenu").click(function () {
     $("#add-node-dialog").dialog({
         modal: true,
         draggable: false,
@@ -290,32 +273,28 @@ $("#addNode").click(function () {
                 else {
                     y = Number(y);
                 }
-                addNode(name, x, y, w, h, color, shape,borderColor/*, borderWidth */);
+
+                var newNode = {
+                    name: name,
+                    x: x,
+                    y: y,
+                    w: w,
+                    h: h,
+                    color: color,
+                    shape: shape,
+                    borderColor: borderColor,
+                    firstTime: true
+                };
+
+                editorActionsManager._do(new AddNodeCommand(newNode));
+                refreshUndoRedoButtonsStatus();
+
+                //addNode(name, x, y, w, h, color, shape,borderColor/*, borderWidth */);
                 $(this).dialog("close");
             }
         }
     });
 });
-var addNode = function (name, x_, y_, w, h, color, shape, borderColor/*, borderWidth*/) {
-    var id_ = IDGenerator.generate();
-
-    var cssTemp = {};
-    cssTemp["content"] = name;
-    cssTemp["background-color"] = color;
-    cssTemp["shape"] = shape;
-    cssTemp["width"] = w;
-    cssTemp["height"] = h;
-//    cssTemp['border-width'] = borderWidth;
-    cssTemp['border-color'] = borderColor;
-    cy.add({
-        group: "nodes",
-        data: {id: id_},
-        position: {x: x_, y: y_},
-        css: cssTemp
-    });
-
-
-};
 /*
 $("#addEdge").click(function (e) {
     if (cy.$("node:selected").length !=  2)

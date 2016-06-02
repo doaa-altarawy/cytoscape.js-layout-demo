@@ -9,8 +9,9 @@ function addNode(param)
 {
   var result;
   if (param.firstTime) {
-    var newNode = param.newNode;
-    result = addRemoveUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
+    var newNode = param;
+    delete param.firstTime;
+    result = addRemoveUtilities.addNode(newNode);
   }
   else {
     result = addRemoveUtilities.restoreEles(param);
@@ -230,16 +231,18 @@ function expandAllNodes(param) {
 }
 
 function simpleExpandAllNodes(param) {
-  var result = {
-      firstTime: false
-  };
-  result.nodesData = getNodePositionsAndSizes();
-  result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
- /* if (!param.firstTime) {
-      returnToPositionsAndSizes(param.nodesData);
-    }*/
-  return result;
-
+    var result = {
+        firstTime: false
+    };
+    result.nodesData = getNodePositionsAndSizes();
+    if (param.firstTime) {
+        result.expandStack = expandCollapseUtilities.simpleExpandAllNodes(param.nodes, param.selector);
+    }
+    else {
+        result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
+        returnToPositionsAndSizes(param.nodesData);
+    }
+    return result;
 }
 
 function collapseExpandedStack(expandedStack) {
@@ -247,13 +250,13 @@ function collapseExpandedStack(expandedStack) {
 }
 
 function undoExpandAllNodes(param) {
-  var result = {
-    firstTime: false
-  };
-  result.nodesData = getNodePositionsAndSizes();
-  expandCollapseUtilities.collapseExpandedStack(param.expandStack);
-  returnToPositionsAndSizes(param.nodesData);
-  return result;
+    var result = {
+        firstTime: false
+    };
+    result.nodesData = getNodePositionsAndSizes();
+    expandCollapseUtilities.collapseExpandedStack(param.expandStack);
+    returnToPositionsAndSizes(param.nodesData);
+    return result;
 }
 
 function getNodePositionsAndSizes() {

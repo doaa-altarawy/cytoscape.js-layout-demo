@@ -1,58 +1,26 @@
 var addRemoveUtilities = {
   defaultsMap: {},
-  addNode: function (x, y, sbgnclass) {
-    var defaultsMap = this.defaultsMap;
-    var defaults = defaultsMap[sbgnclass];
-    var width = defaults ? defaults.width : 50;
-    var height = defaults ? defaults.height : 50;
-    var css = defaults ? {
-      'border-width': defaults['border-width'],
-//      'border-color': defaults['border-color'],
-      'background-color': defaults['background-color'],
-      'font-size': defaults['font-size'],
-      'background-opacity': defaults['background-opacity']
-    } : {};
-    
-    if(defaults && defaults.multimer){
-      sbgnclass += " multimer";
-    }
-    
-    var eles = cy.add({
+
+  addNode: function (newNode) {
+    var id_ = IDGenerator.generate();
+
+    var cssTemp = {};
+    cssTemp["content"] = newNode.name;
+    cssTemp["background-color"] = newNode.color;
+    cssTemp["shape"] = newNode.shape;
+    cssTemp["width"] = newNode.w;
+    cssTemp["height"] = newNode.h;
+//    cssTemp['border-width'] = borderWidth;
+    cssTemp['border-color'] = newNode.borderColor;
+    var node = cy.add({
       group: "nodes",
-      data: {
-        width: width,
-        height: height,
-        sbgnclass: sbgnclass,
-        sbgnbbox: {
-          h: height,
-          w: width,
-          x: x,
-          y: y
-        },
-        sbgnstatesandinfos: [],
-        ports: []
-      },
-      css: css,
-      position: {
-        x: x,
-        y: y
-      }
+      data: {id: id_},
+      position: {x: newNode.x, y: newNode.y},
+      css: cssTemp
     });
-    
-    var newNode = eles[eles.length - 1];
-    if (defaults && defaults['border-color']) {
-      newNode.data('borderColor', defaults['border-color']);
-    }
-    else {
-      newNode.data('borderColor', newNode.css('border-color'));
-    }
-    if (defaults && defaults['sbgnclonemarker']) {
-      newNode._private.data.sbgnclonemarker = defaults.sbgnclonemarker;
-    }
-    newNode.addClass('changeBorderColor');
-    //refreshPaddings();
-    return newNode;
+    return node;
   },
+
   removeNodes: function (nodes) {
     var removedEles = nodes.connectedEdges().remove();
     var children = nodes.children();
