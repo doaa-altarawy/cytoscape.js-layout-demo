@@ -10,58 +10,66 @@ var setFileContent = function(fileName){
 $(function () {
     window.cy = cytoscape({
         container: $('#cy')[0],
-        style: cytoscape.stylesheet()
-            .selector('node')
-            .css({
-                'content': 'data(name)',
-                'text-valign': 'center',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888',
-            })
-            .selector(':selected')
-            .css({
-                'background-color': 'black',
-                'line-color': 'black',
-                'target-arrow-color': 'black',
-                'source-arrow-color': 'black',
-                'text-outline-color': 'black',
-                'border-color': 'black',
-                'border-width': 5
 
-            })
-            .selector('edge')
-            .css({
-                'background-color': 'black',
-                'line-color': 'black',
-                'target-arrow-color': 'red',
-                'source-arrow-color': 'black',
-                'text-outline-color': 'black'
-            })
-            .selector('edge:selected')
-            .css({
-                'background-color': 'green',
-                'line-color': 'green',
-                'width': 5,
-                'opacity':1,
-                'color' : 'green'
-
-            })
-            .selector('node:parent')
-            .css({
-                'content': 'data(name)',
-                'text-valign': 'bottom',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888',
-            }),
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'content': 'data(name)',
+                    'text-valign': 'center',
+                    'color': 'white',
+                    'text-outline-width': 2,
+                    'text-outline-color': '#888',
+                    'shape': 'rectangle'
+                }
+            },
+            {
+                selector: 'node:selected',
+                style: {
+                    'background-color': 'black',
+                    'line-color': 'black',
+                    'target-arrow-color': 'black',
+                    'source-arrow-color': 'black',
+                    'text-outline-color': 'black',
+                    'border-color': 'black',
+                    'border-width': 5
+                }
+            },
+            {
+                selector: ':parent',
+                style: {
+                    'background-opacity': 0.333,
+                    'text-valign': "bottom"
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'background-color': 'black',
+                    'line-color': 'black',
+                    'target-arrow-color': 'red',
+                    'source-arrow-color': 'black',
+                    'text-outline-color': 'black'
+                }
+            },
+            {
+                selector: 'edge:selected',
+                style: {
+                    'background-color': 'green',
+                    'line-color': 'green',
+                    'width': 5,
+                    'opacity':1,
+                    'color' : 'green'
+                }
+            }
+        ],
         elements: {
             nodes: [],
             edges: []
         },
         layout: {
-            name: 'cose2',
-            refresh: 0,
+            name: 'cose-bilkent',
+            refresh: 0
             // Whether to fit the network view after when done
         },
 
@@ -78,7 +86,7 @@ $(function () {
                 }
             });
 */
-            var xmlObject = loadXMLDoc("sample/graph0.xml");
+            var xmlObject = loadXMLDoc("samples/graph0.xml");
             var graphmlConverter = graphmlToJSON(xmlObject);
             atts = graphmlConverter.attributes;
 
@@ -115,56 +123,64 @@ $(function () {
     cy.panzoom(panProps);
 
 });
-$("#cose2").css("background-color", "grey");
+$("#cose-bilkent").css("background-color", "grey");
 
 function refreshCytoscape(graphData) { // on dom ready
 
     cy = cytoscape({
         container: $('#cy')[0],
-        style: cytoscape.stylesheet()
-            .selector('node')
-            .css({
-                'content': 'data(name)',
-                'text-valign': 'center',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888',
-                'border-width': 1
-            })
-            .selector('node:parent')
-            .css({
-                'content': 'data(name)',
-                'text-valign': 'bottom',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888',
-                'border-width': 0,
-                'border-color': 'white'
-            })
-            .selector('node:selected')
-            .css({
-                'background-color': 'black',
-                'text-outline-color': 'black',
-                'border-color': 'black',
-                'border-width': 3,
-                'opacity': 1
-            })
-            .selector('edge')
-            .css({
-                'background-color': 'black',
-                'line-color': 'black',
-                'color': 'black',
-                'target-arrow-color': 'red',
-                'source-arrow-color': 'black',
-                'text-outline-color': 'black'
-            })
-            .selector('edge:selected')
-            .css({
-                'line-color': 'black',
-                'width': 4,
-                'opacity':1
-            }),
-
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'content': 'data(name)',
+                    'text-valign': 'center',
+                    'color': 'white',
+                    'text-outline-width': 2,
+                    'text-outline-color': '#888',
+                    'shape': 'rectangle'
+                }
+            },
+            {
+                selector: 'node:selected',
+                style: {
+                    'background-color': 'black',
+                    'line-color': 'black',
+                    'target-arrow-color': 'black',
+                    'source-arrow-color': 'black',
+                    'text-outline-color': 'black',
+                    'border-color': 'black',
+                    'border-width': 5
+                }
+            },
+            {
+                selector: ':parent',
+                style: {
+                    'background-opacity': 0.333,
+                    'text-valign': "bottom"
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'background-color': 'black',
+                    'line-color': 'black',
+                    'target-arrow-color': 'red',
+                    'source-arrow-color': 'black',
+                    'text-outline-color': 'black'
+                }
+            },
+            {
+                selector: 'edge:selected',
+                style: {
+                    'background-color': 'green',
+                    'line-color': 'green',
+                    'width': 5,
+                    'opacity':1,
+                    'color' : 'green'
+                }
+            },
+        ],
 
         elements: {
             nodes: graphData['nodes'],
@@ -180,7 +196,7 @@ function refreshCytoscape(graphData) { // on dom ready
         wheelSensitivity: 0.1,
         ready: function(){
             var i = 0;
-            cy.on('tap', 'node', function(evt){
+            this.on('tap', 'node', function(evt){
                 if (i < 2){
                     edgeNodes[i++] = this._private.data.id;
                 }
@@ -221,7 +237,7 @@ function refreshCytoscape(graphData) { // on dom ready
             };
 
             var lastMouseDownNodeInfo = null;
-            cy.on("mousedown", "node", function () {
+            this.on("mousedown", "node", function () {
                 var self = this;
                 lastMouseDownNodeInfo = {};
                 lastMouseDownNodeInfo.lastMouseDownPosition = {
@@ -231,7 +247,7 @@ function refreshCytoscape(graphData) { // on dom ready
                 lastMouseDownNodeInfo.node = this;
             });
 
-            cy.on("mouseup", "node", function () {
+            this.on("mouseup", "node", function () {
                 if (lastMouseDownNodeInfo == null) {
                     return;
                 }
@@ -293,9 +309,9 @@ function refreshCytoscape(graphData) { // on dom ready
 ;
 
 
-var COSE2Layout = Backbone.View.extend({
+var COSEBilkentLayout = Backbone.View.extend({
     defaultLayoutProperties: {
-        name: 'cose2',
+        name: 'cose-bilkent',
         ready: function () {
         },
         // Called on `layoutstop`
@@ -340,7 +356,8 @@ var COSE2Layout = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.copyProperties();
-        self.template = _.template($("#cose2-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#cose-bilkent-settings-template").html());
+        self.template = temp(this.currentLayoutProperties);
     },
     copyProperties: function () {
         this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -354,12 +371,13 @@ var COSE2Layout = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        self.template = _.template($("#cose2-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#cose-bilkent-settings-template").html());
+        self.template = temp(this.currentLayoutProperties);
         $(self.el).html(self.template);
 
         $(self.el).dialog();
 
-        $("#save-layout4").die("click").live("click", function (evt) {
+        $("#save-layout4").click( function (evt) {
             self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion4").value);
             self.currentLayoutProperties.nodeOverlap = Number(document.getElementById("node-overlap4").value);
             self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length4").value);
@@ -383,9 +401,11 @@ var COSE2Layout = Backbone.View.extend({
 
         });
 
-        $("#default-layout4").die("click").live("click", function (evt) {
+        $("#default-layout4").click( function (evt) {
             self.copyProperties();
-            self.template = _.template($("#cose2-settings-template").html(), self.currentLayoutProperties);
+            console.log("asd");
+            var temp = _.template($("#cose-bilkent-settings-template").html());
+            self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
         });
 
@@ -421,7 +441,8 @@ var COSELayout = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.copyProperties();
-        self.template = _.template($("#cose-settings-template").html(), self.currentLayoutProperties);
+        var temp = self.template = _.template($("#cose-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
     },
     copyProperties: function () {
         this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -435,12 +456,13 @@ var COSELayout = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        self.template = _.template($("#cose-settings-template").html(), self.currentLayoutProperties);
+        var temp = self.template = _.template($("#cose-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
         $(self.el).html(self.template);
 
         $(self.el).dialog();
 
-        $("#save-layout").die("click").live("click", function (evt) {
+        $("#save-layout").click( function (evt) {
             self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion").value);
             self.currentLayoutProperties.nodeOverlap = Number(document.getElementById("node-overlap").value);
             self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length").value);
@@ -462,9 +484,10 @@ var COSELayout = Backbone.View.extend({
 
         });
 
-        $("#default-layout").die("click").live("click", function (evt) {
+        $("#default-layout").click( function (evt) {
             self.copyProperties();
-            self.template = _.template($("#cose-settings-template").html(), self.currentLayoutProperties);
+            var temp = self.template = _.template($("#cose-settings-template").html());
+            self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
         });
 
@@ -515,7 +538,8 @@ var COLALayout = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.copyProperties();
-        self.template = _.template($("#cola-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#cola-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
     },
     copyProperties: function () {
         this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -530,12 +554,13 @@ var COLALayout = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        self.template = _.template($("#cola-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#cola-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
         $(self.el).html(self.template);
 
         $(self.el).dialog();
 
-        $("#save-layout1").die("click").live("click", function (evt) {
+        $("#save-layout1").click( function (evt) {
             self.currentLayoutProperties.animate = document.getElementById("animate1").checked;
             self.currentLayoutProperties.refresh = Number(document.getElementById("refresh1").value);
             self.currentLayoutProperties.maxSimulationTime = Number(document.getElementById("maxSimulationTime1").value);
@@ -551,9 +576,10 @@ var COLALayout = Backbone.View.extend({
             $(self.el).dialog('close');
         });
 
-        $("#default-layout1").die("click").live("click", function (evt) {
+        $("#default-layout1").click( function (evt) {
             self.copyProperties();
-            self.template = _.template($("#cola-settings-template").html(), self.currentLayoutProperties);
+            var temp = _.template($("#cola-settings-template").html());
+            self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
         });
 
@@ -601,7 +627,8 @@ var ARBORLayout = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.copyProperties();
-        self.template = _.template($("#arbor-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#arbor-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
     },
     copyProperties: function () {
         this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -616,12 +643,13 @@ var ARBORLayout = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        self.template = _.template($("#arbor-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#arbor-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
         $(self.el).html(self.template);
 
         $(self.el).dialog();
 
-        $("#save-layout2").die("click").live("click", function (evt) {
+        $("#save-layout2").click( function (evt) {
             self.currentLayoutProperties.animate = document.getElementById("animate2").checked;
             self.currentLayoutProperties.maxSimulationTime = Number(document.getElementById("maxSimulationTime2").value);
             self.currentLayoutProperties.fit = document.getElementById("fit2").checked;
@@ -635,9 +663,10 @@ var ARBORLayout = Backbone.View.extend({
             $(self.el).dialog('close');
         });
 
-        $("#default-layout2").die("click").live("click", function (evt) {
+        $("#default-layout2").click( function (evt) {
             self.copyProperties();
-            self.template = _.template($("#arbor-settings-template").html(), self.currentLayoutProperties);
+            var temp = _.template($("#arbor-settings-template").html());
+            self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
         });
 
@@ -668,7 +697,8 @@ var SPRINGYLayout = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.copyProperties();
-        self.template = _.template($("#springy-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#springy-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
     },
     copyProperties: function () {
         this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -683,12 +713,13 @@ var SPRINGYLayout = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        self.template = _.template($("#springy-settings-template").html(), self.currentLayoutProperties);
+        var temp = _.template($("#springy-settings-template").html());
+        self.template = temp(self.currentLayoutProperties);
         $(self.el).html(self.template);
 
         $(self.el).dialog();
 
-        $("#save-layout3").die("click").live("click", function (evt) {
+        $("#save-layout3").click( function (evt) {
             self.currentLayoutProperties.animate = document.getElementById("animate3").checked;
             self.currentLayoutProperties.maxSimulationTime = Number(document.getElementById("maxSimulationTime3").value);
             self.currentLayoutProperties.ungrabifyWhileSimulating = document.getElementById("ungrabifyWhileSimulating3").checked;
@@ -703,9 +734,10 @@ var SPRINGYLayout = Backbone.View.extend({
             $(self.el).dialog('close');
         });
 
-        $("#default-layout3").die("click").live("click", function (evt) {
+        $("#default-layout3").click( function (evt) {
             self.copyProperties();
-            self.template = _.template($("#springy-settings-template").html(), self.currentLayoutProperties);
+            var temp = _.template($("#springy-settings-template").html());
+            self.template = temp(self.currentLayoutProperties);
             $(self.el).html(self.template);
         });
 
@@ -715,7 +747,7 @@ var SPRINGYLayout = Backbone.View.extend({
 
 
 var whitenBackgrounds = function(){
-    $("#cose2").css("background-color", "white");
+    $("#cose-bilkent").css("background-color", "white");
     $("#cose").css("background-color", "white");
     $("#cola").css("background-color", "white");
     $("#springy").css("background-color", "white");
