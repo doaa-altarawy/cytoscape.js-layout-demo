@@ -129,10 +129,11 @@ var processNode = function (theNode, pid, nodeAttributes) {
             }
             else if (name == "text") {
                 cyCSS.content = val;
+                cyData.name = val;
             }
         });
 
-        if(nodeGraph.lenght > 0){
+        if(nodeGraph.length > 0){
             cyCSS.height = undefined;
             cyCSS.width = undefined;
             cyPos = undefined;

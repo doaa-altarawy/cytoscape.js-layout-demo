@@ -8,98 +8,18 @@ var setFileContent = function(fileName){
     span.appendChild( document.createTextNode(fileName) );
 };
 $(function () {
-    window.cy = cytoscape({
-        container: $('#cy')[0],
 
-        style: [
-            {
-                selector: 'node',
-                style: {
-                    'content': 'data(name)',
-                    'text-valign': 'center',
-                    'color': 'white',
-                    'text-outline-width': 2,
-                    'text-outline-color': '#888',
-                    'shape': 'rectangle'
-                }
-            },
-            {
-                selector: 'node:selected',
-                style: {
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'target-arrow-color': 'black',
-                    'source-arrow-color': 'black',
-                    'text-outline-color': 'black',
-                    'border-color': 'black',
-                    'border-width': 5
-                }
-            },
-            {
-                selector: ':parent',
-                style: {
-                    'background-opacity': 0.333,
-                    'text-valign': "bottom"
-                }
-            },
-            {
-                selector: 'edge',
-                style: {
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'target-arrow-color': 'red',
-                    'source-arrow-color': 'black',
-                    'text-outline-color': 'black'
-                }
-            },
-            {
-                selector: 'edge:selected',
-                style: {
-                    'background-color': 'green',
-                    'line-color': 'green',
-                    'width': 5,
-                    'opacity':1,
-                    'color' : 'green'
-                }
-            }
-        ],
-        elements: {
-            nodes: [],
-            edges: []
-        },
-        layout: {
-            name: 'cose-bilkent',
-            refresh: 0
-            // Whether to fit the network view after when done
-        },
+    var xmlObject = loadXMLDoc("samples/graph0.xml");
+    var graphmlConverter = graphmlToJSON(xmlObject);
+    atts = graphmlConverter.attributes;
 
-        ready: function(){
-/*            var i = 0;
-            cy.on('tap', 'node', function(evt){
-                if (i < 2){
-                    if (this._private.data.id != edgeNodes[i])
-                        edgeNodes[i++] = this._private.data.id;
-                }
-                else{
-                    edgeNodes[0] = this._private.data.id;
-                    i = 0;
-                }
-            });
-*/
-            var xmlObject = loadXMLDoc("samples/graph0.xml");
-            var graphmlConverter = graphmlToJSON(xmlObject);
-            atts = graphmlConverter.attributes;
+    var cytoscapeJsGraph = {
+        edges: graphmlConverter.objects[2],
+        nodes: graphmlConverter.objects[1]
+    };
+    refreshCytoscape(cytoscapeJsGraph);
+    setFileContent("graph0.graphml");
 
-            var cytoscapeJsGraph = {
-                edges: graphmlConverter.objects[2],
-                nodes: graphmlConverter.objects[1]
-            };
-            refreshCytoscape(cytoscapeJsGraph);
-            setFileContent("graph0.graphml");
-
-        }
-
-    });
 
     var panProps = ({
         zoomFactor: 0.05, // zoom factor per zoom tick
