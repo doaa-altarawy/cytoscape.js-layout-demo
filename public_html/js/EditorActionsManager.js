@@ -986,17 +986,6 @@ var refreshUndoRedoButtonsStatus = function(){
     $("#redo-last-action").parent("li").removeClass("disabled");
   }
 }
-/*
- *	Base command class
- * do: reference to the function that performs actual action for this command.
- * undo: reference to the action that is reverse of this action's command.
- * params: additional parameters for this command
- */
-var Command = function (_do, undo, params) {
-  this._do = _do;
-  this.undo = undo;
-  this.params = params;
-};
 
 var AddNodeCommand = function (newNode)
 {
@@ -1161,6 +1150,20 @@ var CloneGivenElementsCommand = function(param) {
   return new Command(cloneGivenElements, removeEles, param);
 };
 
+
+/*
+ *	Base command class
+ * do: reference to the function that performs actual action for this command.
+ * undo: reference to the action that is reverse of this action's command.
+ * params: additional parameters for this command
+ */
+var Command = function (_do, undo, params) {
+  this._do = _do;
+  this.undo = undo;
+  this.params = params;
+};
+
+
 /**
  *  Description: A simple action manager that acts also as a undo-redo manager regarding Command Design Pattern
  *	Author: Istemi Bahceci<istemi.bahceci@gmail.com>
@@ -1237,20 +1240,5 @@ function EditorActionsManager()
     this.redoStack = [];
   };
 }
+
 var editorActionsManager = new EditorActionsManager();
-
-/*
- *  A sample run that gives insight about the usage of EditorActionsManager and commands
- */
-function sampleRun()
-{
-  var editorActionsManager = new EditorActionsManager();
-
-  // issue commands
-  editorActionsManager._do(new AddNodeCommand(newNode));
-
-  // undo redo mechanism
-  editorActionsManager.undo();
-  editorActionsManager.redo();
-
-}

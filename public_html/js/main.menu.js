@@ -72,19 +72,6 @@ $("#collapse-selected").click(function (e) {
         return;
     }
 
-    /*
-     if (window.rearrangeAfterExpandCollapse == null) {
-     window.rearrangeAfterExpandCollapse =
-     (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
-     }
-
-     if (rearrangeAfterExpandCollapse)
-     editorActionsManager._do(new CollapseGivenNodesCommand({
-     nodes: nodes,
-     firstTime: true
-     }));
-     else*/
-
     editorActionsManager._do(new SimpleCollapseGivenNodesCommand(nodes));
     refreshUndoRedoButtonsStatus();
 
@@ -97,17 +84,7 @@ $("#expand-selected").click(function (e) {
     if (!thereIs) {
         return;
     }
-    /*
-     if (window.rearrangeAfterExpandCollapse == null) {
-     window.rearrangeAfterExpandCollapse =
-     (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
-     }
-     if (rearrangeAfterExpandCollapse)
-     editorActionsManager._do(new ExpandGivenNodesCommand({
-     nodes: nodes,
-     firstTime: true
-     }));
-     else*/
+
     editorActionsManager._do(new SimpleExpandGivenNodesCommand(nodes));
     refreshUndoRedoButtonsStatus();
 });
@@ -198,7 +175,124 @@ var arborLayoutProp = new ARBORLayout({
 var springyLayoutProp = new SPRINGYLayout({
     el: '#springy-layout-table'
 });
+
+
 $("#add-node-dialog").hide();
+
+function toggleUserControl(){
+/*
+    toggleFuncs = function (fs){
+        for(var i = 0; i < fs.length; i++)
+            fs[i](!fs[i]());
+    };
+    console.log(cy);
+    toggleFuncs([*/
+/*
+    cy.panningEnabled(!cy.panningEnabled());
+        cy.zoomingEnabled(!cy.zoomingEnabled());
+        cy.boxSelectionEnabled(!cy.boxSelectionEnabled());
+        cy.autoungrabify(!cy.autoungrabify());
+        cy.autounselectify(!cy.autounselectify());
+        cy.autolock(!cy.autolock());*/
+}
+
+
+$("#addNodeMenu").click(function () {    toggleUserControl();
+
+    $("#cy").css("background-image", "url('css/images/grid_background.gif')").css("cursor", "crosshair");
+    $("#cy").popover({
+        placement: "top",
+        content: "Select the position of new node",
+        template: '<div class="popover" role="tooltip">' +
+        '<div class="arrow"></div>' +
+        '<div class="popover-content"></div>' +
+        '</div>'
+    }).popover("show");
+
+    var newNode = {
+        firstTime: true
+    };
+
+    cy.one("click", function (e) {
+        toggleUserControl();
+
+        var x = e.cyPosition.x;
+        var y = e.cyPosition.y;
+
+        $("#new-node-y").val(e.cyPosition.y);
+
+        $('#new-node-color').colorpicker();
+        $('#new-node-border-color').colorpicker();
+
+        $("#add-node-modal").modal();
+
+        $("#exit-new-node").one("click", function () {
+            toggleUserControl();
+            $("#cy").css("background-image", "").css("cursor", "");
+            $("#cy").popover("destroy");
+        });
+
+        $("#save-new-node").one("click", function () {
+            var name = $("#new-node-name").val();
+            var w = $("#new-node-width").val();
+            var h = $("#new-node-height").val();
+          /*  var x = $("#new-node-x").val();
+            var y = $("#new-node-y").val();*/
+            var color = $("#new-node-color").colorpicker("getValue", "gray");
+            var shape = $("#new-node-shape").val();
+            var borderColor = $("#new-node-border-color").colorpicker("getValue", "black");
+            //var borderWidth = $("#new-node-border-width").val();
+
+            if (w == "") {
+                w = null;
+            }
+            else {
+                w = Number(w);
+            }
+
+            if (h == "") {
+                h = null;
+            }
+            else {
+                h = Number(h);
+            }
+
+            if (x == "") {
+                x = null;
+            }
+            else {
+                x = Number(x);
+            }
+
+            if (y == "") {
+                y = null;
+            }
+            else {
+                y = Number(y);
+            }
+
+            var newNode = {
+                name: name,
+                x: x,
+                y: y,
+                w: w,
+                h: h,
+                color: color,
+                shape: shape,
+                borderColor: borderColor,
+                firstTime: true
+            };
+            toggleUserControl();
+            $("#cy").css("background-image", "").css("cursor", "");
+            $("#cy").popover("destroy");
+            editorActionsManager._do(new AddNodeCommand(newNode));
+            refreshUndoRedoButtonsStatus();
+
+        });
+    });
+});
+
+/*
 $("#addNodeMenu").click(function () {
     $("#add-node-dialog").dialog({
         modal: true,
@@ -227,14 +321,7 @@ $("#addNodeMenu").click(function () {
                 else {
                     w = Number(w);
                 }
-                /*               if (borderWidth == "") {
-                 borderWidth = null;
-                 }
-                 else {
-                 borderWidth = Number(borderWidth);
-                 }
 
-                 */
                 if (h == "") {
                     h = null;
                 }
@@ -271,42 +358,13 @@ $("#addNodeMenu").click(function () {
                 editorActionsManager._do(new AddNodeCommand(newNode));
                 refreshUndoRedoButtonsStatus();
 
-                //addNode(name, x, y, w, h, color, shape,borderColor/*, borderWidth */);
+                //addNode(name, x, y, w, h, color, shape,borderColor);
                 $(this).dialog("close");
             }
         }
     });
-});
-/*
- $("#addEdge").click(function (e) {
- if (cy.$("node:selected").length !=  2)
- return;
- var edge = new Object();
- edge.id = IDGenerator.generate();
- edge.group = 'edges';
- edge.data = {source: cy.$("node:selected")[0].data('id'), target: cy.$("node:selected")[1].data('id')}
- cy.add(edge);
- });
+});*/
 
- $("#delete").click(function (e) {
- var allNodes = cy.$('node');
-
-
- var tNodes = cy.$('node:selected');
- var tEdges = cy.$('edge:selected');
- for (var i = 0; i < tEdges.length; i++)
- {
- cy.remove(tEdges[i]);
- }
- for (var i = 0; i < tNodes.length; i++)
- {
- deleteNode(tNodes[i]);
- }
- cy.layout({
- name: "preset"
- });
-
- });*/
 var addChild = function(children, theChild){
     var len = children.length;
     for (var i = 0; i < theChild.children().length; i++){
@@ -319,29 +377,7 @@ var addChild = function(children, theChild){
         }
     }
 };
-var deleteNode = function(theNode){
-    var children = theNode.children();
-    var len = children.length;
-    var allEdges = cy.$('edge');
-    var parData = null;
-    if (theNode.isChild()){
-        parData = theNode._private.data.parent
-    }
-    for (var i = 0; i < children.length; i++){
-        if (children[i].isParent())
-            addChild(children, children[i]);
-    }
-    cy.remove(theNode);
-    if (children != null && len > 0 ){
 
-        for(var a = 0; a < len; a++){
-            children[a]._private.data.parent = parData;
-
-        }
-        cy.add(children);
-        cy.add(allEdges);
-    }
-};
 $("#makeCompound").click(function (e) {
     var nodes = cy.$('node:selected');
 
@@ -350,6 +386,7 @@ $("#makeCompound").click(function (e) {
         firstTime: true
     }));
 });
+
 $("#layout-properties").click(function (e) {
     if (tempName !== '') {
         switch (tempName) {
@@ -425,6 +462,7 @@ $("body").on("change", "#file-input", function (e) {
     setFileContent(file.name);
     $("#file-input").val(null);
 });
+
 $("#load-file").click(function (e) {
     $("#file-input").trigger('click');
 });
@@ -435,7 +473,8 @@ $("#new").click(function(e){
     graphData['edges'] = undefined;
     refreshCytoscape(graphData);
 
-})
+});
+
 
 $("#save-as-png").click(function(evt){
     var pngContent = cy.png({scale : 3, full : true});
@@ -471,6 +510,7 @@ $("#save-as-png").click(function(evt){
     saveAs(b64toBlob(b64data, "image/png"), "network.png");
 
 });
+
 
 
 var loadSample = function(fileName){

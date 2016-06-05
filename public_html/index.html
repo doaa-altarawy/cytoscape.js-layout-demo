@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
     <link rel="stylesheet" href="css/cytoscape.js-panzoom.css">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
     <link href="css/my-style.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -129,90 +130,67 @@
 
 <div id="cy"></div>
 
-<div id="add-node-dialog" title="Add Node" style="display: none">
-                <span class="ui-state-default">
-                        <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 0 0;">
-                        </span>
-                    </span>
-    <table>
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Name </span>
-            </td>
-            <td>
-                <input id="new-node-name" type="text" value="newNode"/>
-            </td>
-        </tr>
+<div class="modal fade" id="add-node-modal" tabindex="-1" role="dialog" aria-labelledby="add-node-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="add-node-modal-label">Add new node</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new-node-name">Name</label>
+                    <input type="text" class="form-control" id="new-node-name" placeholder="Name" value="newNode">
+                </div>
+                <div class="form-group">
+                    <label for="new-node-width">Width</label>
+                    <input type="number" class="form-control" min="0" value="40" id="new-node-width" placeholder="Width">
+                </div>
+                <div class="form-group">
+                    <label for="new-node-height">Height</label>
+                    <input type="number" class="form-control" min="0" value="40" id="new-node-height" placeholder="Height">
+                </div>
+                <div class="form-group">
+                    <label for="new-node-shape">Shape</label>
+                        <select id="new-node-shape" class="form-control">
+                            <option value="rectangle">Rectangle</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="ellipse">Ellipse</option>
+                            <option value="roundrectangle">Round Rectangle</option>
+                            <option value="pentagon">Pentagon</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="new-node-color">Color</label>
+                    <div id="new-node-color" class="input-group colorpicker-component">
+                        <input type="text" value="gray" class="form-control" />
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-node-border-color">Border Color</label>
 
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Width </span>
-            </td>
-            <td>
-                <input id="new-node-width" type="text" value="40"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Height </span>
-            </td>
-            <td>
-                <input id="new-node-height" type="text" value="40"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Border Color </span>
-            </td>
-            <td>
-                <input id="new-node-border-color" type="color" value="#000000"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> X </span>
-            </td>
-            <td>
-                <input id="new-node-x" type="text" value="100"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Y </span>
-            </td>
-            <td>
-                <input id="new-node-y" type="text" value="100"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Color </span>
-            </td>
-            <td>
-                <input id="new-node-color" type="color" value="#ffffff"/>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <span class="add-on layout-text"> Shape </span>
-            </td>
-            <td>
-                <select id="new-node-shape">
-                    <option value="rectangle">Rectangle</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="ellipse">Ellipse</option>
-                    <option value="roundrectangle">Round Rectangle</option>
-                    <option value="pentagon">Pentagon</option>
-                </select>
-            </td>
-        </tr>
-    </table>
+                    <div id="new-node-border-color" class="input-group colorpicker-component">
+                        <input type="text" value="black" class="form-control" />
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
+                    <label for="new-node-x">X Position</label>
+                    <input type="number" class="form-control" id="new-node-x" placeholder="X Position">
+                </div>
+                <div class="form-group">
+                    <label for="new-node-y">Y Position</label>
+                    <input type="number" class="form-control" id="new-node-y" placeholder="Y Position">
+                </div>
+            </div>-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="exit-new-node">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="save-new-node">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="cose-bilkent-layout-table" title="CoSE-Bilkent Properties" style="display: inline;resize: none;">
     <!-- sbgn layout table will be shown here -->
@@ -832,10 +810,11 @@
 
 <!-- VIEW SCRIPTS -->
 <script src="js/view_scripts/jquery-1.12.4.min.js"></script>
+<script src="js/view_scripts/jquery-ui.min.js"></script>
 <script src="js/view_scripts/bootstrap.min.js"></script>
 <script src="js/view_scripts/underscore-min.js"></script>
 <script src="js/view_scripts/backbone-min.js"></script>
-<script src="js/view_scripts/jquery-ui.min.js"></script>
+<script src="js/view_scripts/bootstrap-colorpicker.min.js"></script>
 
 <!-- CYTOSCAPE & EXTENSIONS -->
 <script src="js/cytoscape/cytoscape.min.js"></script>
