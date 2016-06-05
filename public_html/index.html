@@ -130,8 +130,31 @@
 
 <div id="cy"></div>
 
+<div id="quick-help-template" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Quick Help</h4>
+            </div>
+            <div class="modal-body">
+                <p><span style="font-weight: bold">File | Load ... :</span> Load a graph in GraphML</p>
+                <p><span style="font-weight: bold">File | Save :</span> Save the current graph in GraphML</p>
+                <p><span style="font-weight: bold">Add Node ...:</span> Add a simple node</p>
+                <p><span style="font-weight: bold">Add Compound For Selected:</span> Add a new compound containing selected nodes</p>
+                <p><span style="font-weight: bold">Add Edge Between Selected:</span> Add an edge between two selected nodes</p>
+                <p><span style="font-weight: bold">Delete Selected:</span> Delete selected nodes and edges</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="modal fade" id="add-node-modal" tabindex="-1" role="dialog" aria-labelledby="add-node-modal-label">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -208,28 +231,6 @@
     <!-- sbgn layout table will be shown here -->
 </div>
 
-<div id="quick-help-template" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Quick Help</h4>
-            </div>
-            <div class="modal-body">
-                <p><span style="font-weight: bold">File | Load ... :</span> Load a graph in GraphML</p>
-                <p><span style="font-weight: bold">File | Save :</span> Save the current graph in GraphML</p>
-                <p><span style="font-weight: bold">Add Node ...:</span> Add a simple node</p>
-                <p><span style="font-weight: bold">Add Compound For Selected:</span> Add a new compound containing selected nodes</p>
-                <p><span style="font-weight: bold">Add Edge Between Selected:</span> Add an edge between two selected nodes</p>
-                <p><span style="font-weight: bold">Delete Selected:</span> Delete selected nodes and edges</p>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <script type="text/template" id="cose-bilkent-settings-template">
     <table class="table-condensed layout-table">
