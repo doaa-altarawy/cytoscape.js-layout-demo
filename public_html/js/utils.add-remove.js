@@ -35,7 +35,7 @@ var addRemoveUtilities = {
   },
 
   addEdgeSelected: function(source, target) {
-  console.log(source + target)
+
     if (cy.$("node:selected").length !=  2)
       return;
 
