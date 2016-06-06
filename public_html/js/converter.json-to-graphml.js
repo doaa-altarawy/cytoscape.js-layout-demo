@@ -26,7 +26,7 @@ var handleNode = function (node, tabNum) {
         " " + node._private.style["background-color"].value[2] + '</data>\n';
 
     txt += oneMoreTab;
-    txt += '<data key="text">' + node.css("content") + '</data>\n';
+    txt += '<data key="text">' + node.data("name") + '</data>\n';
 
     txt += oneMoreTab;
     txt += '<data key="color1">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +

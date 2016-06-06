@@ -138,6 +138,7 @@ var processNode = function (theNode, pid, nodeAttributes) {
             cyCSS.width = undefined;
             cyPos = undefined;
         }
+        $.extend(cyData, cyCSS);
         nodes.push({data: cyData, css: cyCSS, position: cyPos});
 
 

@@ -14,7 +14,7 @@ var addRemoveUtilities = {
     cssTemp['border-color'] = newNode.borderColor;
     var node = cy.add({
       group: "nodes",
-      data: {id: id_},
+      data: {id: id_, name: newNode.name},
       position: {x: newNode.x, y: newNode.y},
       css: cssTemp
     });
