@@ -87,7 +87,8 @@ function refreshCytoscape(graphData) { // on dom ready
                     'line-color': 'black',
                     'target-arrow-color': 'red',
                     'source-arrow-color': 'black',
-                    'text-outline-color': 'black'
+                    'text-outline-color': 'black',
+                    'curve-style': "bezier"
                 }
             },
             {
