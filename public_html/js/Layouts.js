@@ -577,7 +577,8 @@ var ARBORLayout = Backbone.View.extend({
             options[prop] = this.currentLayoutProperties[prop];
         }
         console.log(options);
-        cy.layout(options);
+        //cy.layout(options);
+        ur.do("layout", options);
     },
     render: function () {
         var self = this;
