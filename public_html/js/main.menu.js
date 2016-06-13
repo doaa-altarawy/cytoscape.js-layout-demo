@@ -1,31 +1,29 @@
 var refreshUndoRedoButtonsStatus = function(){
 
-    if (editorActionsManager.isUndoStackEmpty()) {
+    if (ur.isUndoStackEmpty()) {
         $("#undo").parent("li").addClass("disabled");
     }
     else {
         $("#undo").parent("li").removeClass("disabled");
     }
 
-    if (editorActionsManager.isRedoStackEmpty()) {
+    if (ur.isRedoStackEmpty()) {
         $("#redo").parent("li").addClass("disabled");
     }
     else {
         $("#redo").parent("li").removeClass("disabled");
     }
-}
+};
 
 
 ///////////////////// EDIT ////////////////////////////
 
 $("#undo").click(function (e) {
-    editorActionsManager.undo();
-    refreshUndoRedoButtonsStatus();
+    ur.undo();
 });
 
 $("#redo").click(function (e) {
-    editorActionsManager.redo();
-    refreshUndoRedoButtonsStatus();
+    ur.redo();
 });
 
 $("#delete").click(function (e) {
@@ -34,21 +32,19 @@ $("#delete").click(function (e) {
     if(selectedEles.length == 0){
         return;
     }
-
-    editorActionsManager._do(new RemoveElesCommand(selectedEles));
-    refreshUndoRedoButtonsStatus();
+    ur.do("remove", selectedEles);
 });
 
 $("#addEdge").click(function (e) {
 
     if(cy.$("node:selected").length == 2)
-        editorActionsManager._do(new AddEdgeSelectedCommand({
-            source: cy.$("node:selected")[0].data('id'),
-            target: cy.$("node:selected")[1].data('id'),
-            firstTime: true
-        }));
-
-    refreshUndoRedoButtonsStatus();
+        ur.do("add", {
+            group: "edges",
+            data: {
+                source: cy.$("node:selected")[0].data('id'),
+                target: cy.$("node:selected")[1].data('id')
+            }
+        });
 });
 
 ///////////////////// VIEW ////////////////////////////
@@ -285,8 +281,7 @@ $("#addNodeMenu").click(function () {    toggleUserControl();
             toggleUserControl();
             $("#cy").css("background-image", "").css("cursor", "");
             $("#cy").popover("destroy");
-            editorActionsManager._do(new AddNodeCommand(newNode));
-            refreshUndoRedoButtonsStatus();
+            ur.do("addNode", newNode);
 
         });
     });
@@ -381,10 +376,10 @@ var addChild = function(children, theChild){
 $("#makeCompound").click(function (e) {
     var nodes = cy.$('node:selected');
 
-    editorActionsManager._do(new CreateCompundForSelectedNodesCommand({
+    ur.do("createCompound", {
         nodesToMakeCompound: nodes,
         firstTime: true
-    }));
+    });
 });
 
 $("#layout-properties").click(function (e) {

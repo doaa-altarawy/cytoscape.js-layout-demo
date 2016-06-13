@@ -226,6 +226,23 @@ function refreshCytoscape(graphData) { // on dom ready
         zoomOutIcon: 'fa fa-minus',
         resetIcon: 'fa fa-expand'    });
     cy.panzoom(panProps);
+
+    ur = cy.undoRedo({
+
+    });
+
+    cy.on("undo", function (e, name) {
+        refreshUndoRedoButtonsStatus();
+    });
+    cy.on("redo", function (e, name) {
+        refreshUndoRedoButtonsStatus();
+    });
+    cy.on("do", function (e, name) {
+        refreshUndoRedoButtonsStatus();
+    });
+
+    ur.action("addNode", addNode, removeNodes);
+    ur.action("createCompound", createCompoundForSelectedNodes, removeCompound);
 }
 ;
 
