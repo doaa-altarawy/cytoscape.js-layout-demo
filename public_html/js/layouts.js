@@ -83,9 +83,11 @@ function refreshCytoscape(graphData) { // on dom ready
             {
                 selector: 'edge',
                 style: {
+                    'target-arrow-shape': 'triangle',
                     'background-color': 'black',
                     'line-color': 'black',
-                    'target-arrow-color': 'red',
+                    'target-arrow-color': 'black',
+                    // 'target-arrow-color': 'red',
                     'source-arrow-color': 'black',
                     'text-outline-color': 'black',
                     'curve-style': "bezier"
@@ -94,6 +96,7 @@ function refreshCytoscape(graphData) { // on dom ready
             {
                 selector: 'edge:selected',
                 style: {
+                    'target-arrow-color': 'green',
                     'background-color': 'green',
                     'line-color': 'green',
                     'width': 5,
