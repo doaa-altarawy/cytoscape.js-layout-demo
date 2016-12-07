@@ -2,7 +2,7 @@
     margin: auto;
     border: 1px solid #ddd;
     height: 680px;
-    width: 1000px;
+    width: 100%;
     overflow: auto !important;
     border-radius: 0.25em;
 }
@@ -64,13 +64,13 @@ i.shortcut {
     }
 }
 
-.nav-menu {
+/*.nav-menu {
     border: 1px solid #ddd;
     border-radius: 0.25em;
     margin: auto;
     height: 40px;
     width: 1000px;
-}
+}*/
 
 .nav li.dropdown ul.dropdown-menu li:HOVER ul {
     display:block;
@@ -87,11 +87,11 @@ i.shortcut {
     top: auto;
     margin-top: -30px;
 }
-.dropdown .dropdown-menu{
+/*.dropdown .dropdown-menu{
     z-index:3000;
-}
+}*/
 
-.navbar .nav li.dropdown.open > .dropdown-toggle,
+/*.navbar .nav li.dropdown.open > .dropdown-toggle,
 .navbar .nav li.dropdown.active > .dropdown-toggle,
 .navbar .nav li.dropdown.open.active > .dropdown-toggle {
     color: #555555;
@@ -107,6 +107,7 @@ i.shortcut {
     background-image: none;
     filter: none;
 }
+*/
 .input-file{
     float:left;
     text-align: right;

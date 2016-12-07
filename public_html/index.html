@@ -8,7 +8,8 @@
     <title>Cytoscape.js Layout Demo</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="css/bootswatch/cerulean/bootstrap.min.css">
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
@@ -25,10 +26,16 @@
 </head>
 <body>
 
-<nav id="myNavbar" class="navbar navbar-default my-nav-bar" role="navigation">
+<!--~~~~~~~~~~~~~~~~~~~~~~ Main Menu ~~~~~~~~~~~~~~~~~~~~~~~-->
+<div class="navbar-sm navbar-inverse container" style="width:85%">
+   
+    <div class="navbar-header">
+        <a href="./" class="navbar-brand">DeTangle</a>
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main"/>
+    </div>
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="container">
-        <!-- Collect the nav links, forms, and other content for toggling -->
+    <!-- <div class="collapse navbar-collapse" id="navbar-main"> -->
+    <div class="container" id="navbar-main">
         <ul class="nav navbar-nav">
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">File <b class="caret"></b></a>
@@ -112,24 +119,67 @@
                 </a>
             </li>
         </ul>
-    </div><!-- /.navbar-collapse -->
-</nav>
+        <!-- TODO: fix centering and location-->
+        <div class="pull-right"><span id="file-name" class="badge"></span></div>
 
-<div id="info-content">
-    <table width="100%" height="100%" align="center" valign="center">
-        <tr>
-            <td>
-                <span class="input-file" id="file-name"></span>
-            </td>
-            <td>
-                <span class="label">Cytoscape.js<i> Layout Demo</i></span>
-            </td>
-        </tr>
-    </table>
+    </div>
+</div><!-- /main manu -->
+
+<!--~~~~~~~~~~~~~~~~ container for toolbar Buttons ~~~~~~~~~~~~~~~~~~~-->
+<div class="container" style="width:85%">
+    <div style="margin-top: 10px;" class="row">
+        <div class="btn-group col-xs-6">                    
+            <div class="btn-group">
+                <a href="#" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown">
+                    Add Edge <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick="changeBond(1)">Low</a></li>
+                        <li><a href="#" onclick="changeBond(3)">High</a></li>
+                    </ul>                        
+             </div>  
+
+             <a href="#" class="btn btn-sm btn-danger">Delete Edge</a>
+
+            <div class="col-xs-5">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <input type="text" class="form-control input-sm" placeholder="Include genes...">
+                    <button class="btn btn-sm btn-info" type="button">Show</button>
+                  </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-4">
+          <label class="control-label" for="weightCutoffSlider">Weight Cut-off:</label>
+            <input id="weightCutoffSlider" type="text" class="span2"
+            data-slider-min="0" data-slider-max="1" data-slider-step="0.02" data-slider-value="0.01"/> 
+        </div>
+        
+        <div class="pull-right">                
+            <button id="reEvaluate" type="button" class="btn btn-sm btn-success">
+                <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Re-evaluate
+            </button>
+        </div>
+    </div>
 </div>
 
-<div id="cy"></div>
+<!--~~~~~~~~~~~~~~~~~~~~~~ D3 canvas ~~~~~~~~~~~~~~~~~~~~~~~-->
+<div class="container" style="width: 85%">
+    <ul id="mainContents" class="nav nav-tabs">
+        <li class="active"><a href="#cy" data-toggle="tab" aria-expanded="true">Cytoscape</a></li>
+        <li class=""><a href="#svgDisplay" data-toggle="tab" aria-expanded="false">D3</a></li>
+    </ul>
 
+    <div class="tab-content table-bordered">
+        <div id="cy" class="canvas tab-pane  active in"></div>
+        <div id="svgDisplay" class="canvas tab-pane"></div>
+    </div>
+</div>
+
+
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Modals ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <div id="quick-help-template" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -138,9 +188,9 @@
                 <h4 class="modal-title">Quick Help</h4>
             </div>
             <div class="modal-body">
-                <p><span style="font-weight: bold">File | Load ... :</span> Load a graph in GraphML</p>
+                <p><span style="font-weight: bold">File | Load :</span> Load a graph in GraphML</p>
                 <p><span style="font-weight: bold">File | Save :</span> Save the current graph in GraphML</p>
-                <p><span style="font-weight: bold">Add Node ...:</span> Add a simple node</p>
+                <p><span style="font-weight: bold">Add Node :</span> Add a simple node</p>
                 <p><span style="font-weight: bold">Add Compound For Selected:</span> Add a new compound containing selected nodes</p>
                 <p><span style="font-weight: bold">Add Edge Between Selected:</span> Add an edge between two selected nodes</p>
                 <p><span style="font-weight: bold">Delete Selected:</span> Delete selected nodes and edges</p>
@@ -153,6 +203,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 <div class="modal fade" id="add-node-modal" tabindex="-1" role="dialog" aria-labelledby="add-node-modal-label">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -215,6 +266,9 @@
         </div>
     </div>
 </div>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
 <div id="cose-bilkent-layout-table" title="CoSE-Bilkent Properties" style="display: inline;resize: none;">
     <!-- sbgn layout table will be shown here -->
 </div>
@@ -231,6 +285,7 @@
     <!-- sbgn layout table will be shown here -->
 </div>
 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
 <script type="text/template" id="cose-bilkent-settings-template">
     <table class="table-condensed layout-table">
@@ -529,6 +584,9 @@
         </tr>
     </table>
 </script>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
 <script type="text/template" id="cola-settings-template">
     <table class="table-condensed layout-table">
         <tr>
@@ -712,6 +770,9 @@
         </tr>
     </table>
 </script>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
 <script type="text/template" id="springy-settings-template">
     <table class="table-condensed layout-table">
         <tr>
@@ -808,6 +869,7 @@
     </table>
 </script>
 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
 <!-- VIEW SCRIPTS -->
 <script src="js/view_scripts/jquery-1.12.4.min.js"></script>
