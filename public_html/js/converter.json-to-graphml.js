@@ -1,4 +1,5 @@
 var handleNode = function (node, tabNum) {
+    // console.log(node);
     var txt = "";
     var tabs = "";
     for (var i = 0; i < tabNum; i++)
@@ -15,26 +16,41 @@ var handleNode = function (node, tabNum) {
     txt += oneMoreTab;
     txt += '<data key="y">' + node.position("y") + '</data>\n';
 
-    txt += oneMoreTab;
-    txt += '<data key="height">' + node._private.style['height'].value + '</data>\n';
+    if (node._private.style.hasOwnProperty('height')){
+      txt += oneMoreTab;
+      txt += '<data key="height">' + node._private.style['height'].value + '</data>\n';
+    }
 
-    txt += oneMoreTab;
-    txt += '<data key="width">' + node._private.style['width'].value + '</data>\n';
+    if (node._private.style.hasOwnProperty('width')){
+      txt += oneMoreTab;
+      txt += '<data key="width">' + node._private.style['width'].value + '</data>\n';
+    }
 
-    txt += oneMoreTab;
-    txt += '<data key="color">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +
+    if (node._private.style.hasOwnProperty('background-color') &&
+            node._private.style["background-color"] != "undefined"){
+      console.log(node._private.style);
+      txt += oneMoreTab;
+      txt += '<data key="color">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +
         " " + node._private.style["background-color"].value[2] + '</data>\n';
+    }
 
-    txt += oneMoreTab;
-    txt += '<data key="text">' + node.data("name") + '</data>\n';
+    if (node.data("name") != 'undefined'){
+      txt += oneMoreTab;
+      txt += '<data key="text">' + node.data("name") + '</data>\n';
+    }
 
-    txt += oneMoreTab;
-    txt += '<data key="color1">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +
-        " " + node._private.style["background-color"].value[2] + '</data>\n';
+    // TODO: Why color1 (same as color)?
+    if (node._private.style.hasOwnProperty('background-color') &&
+            node._private.style["background-color"] != "undefined"){
+      txt += oneMoreTab;
+      txt += '<data key="color1">' + node._private.style["background-color"].value[0] + " " + node._private.style["background-color"].value[1] +
+          " " + node._private.style["background-color"].value[2] + '</data>\n';
+    }
 
-    txt += oneMoreTab;
-    txt += '<data key="shape">' + node.css("shape").substring(0,1).toUpperCase() + node.css("shape").substring(1,node.css("shape").length) + '</data>\n';
-
+    if (node.css("shape") != 'undefined'){
+      txt += oneMoreTab;
+      txt += '<data key="shape">' + node.css("shape").substring(0,1).toUpperCase() + node.css("shape").substring(1,node.css("shape").length) + '</data>\n';
+    }
 
 
 
@@ -67,7 +83,9 @@ var handleRootGraph = function () {
   cy.edges().each(function () {
     txt = txt + "<edge id=\"" + this._private.data.id + "\" source=\"" + this._private.data.source + "\" target=\"" + this._private.data.target + "\">\n";
     for (var i = 0; i < atts[2].length; i++) {
-      txt += "<data key=\"" + atts[2][i]['id'] + "\">" + this._private.data.x + "</data>\n";
+      if (this._private.data.x != 'undefined'){
+        txt += "<data key=\"" + atts[2][i]['id'] + "\">" + this._private.data.x + "</data>\n";
+      }
     }
     txt += "</edge>";
   });
