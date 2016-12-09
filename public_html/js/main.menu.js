@@ -1,3 +1,38 @@
+
+
+$(function() {
+
+    $("#weightCutoffSlider").bootstrapSlider({
+        precision: 1,
+        formatter: function(value) {
+            return 'Edge threshold: ' + value;
+        }
+    });
+
+
+    // // Work around for a bug in displaying the toolip
+    // $('#weightCutoffSlider').bootstrapSlider().on('slide', function(e) {
+    //     var w = Math.round(e.value*100) / 100.0;
+    //     $('#weightCutoffSlider').bootstrapSlider('setValue', w);
+    // });
+
+    // // When weight cut off change, update the graph
+    // $('#weightCutoffSlider').bootstrapSlider().on('slide', function(e) {
+    //     var w = Math.round(e.value*100) / 100.0;
+    //     // refresh the graph with w
+    //     //updateEdges(w);
+    // });
+
+}) //done
+
+// When weight cut off change, update the graph
+$('#weightCutoffSlider').on('slide', function(e) {
+    //var w = Math.round(e.value*100) / 100.0;
+    // refresh the graph with w
+    //updateEdges(w);
+
+});
+
 var refreshUndoRedoButtonsStatus = function(){
 
     if (ur.isUndoStackEmpty()) {
@@ -61,6 +96,7 @@ var getSelectedNodesForExpandCollapse = function(){
 
 }
 
+// TODO: Include selected genes, comma separated
 $("#showNode-btn").click(function (e){
     var text = $("#showNode-txt").val();
     if (text != ""){

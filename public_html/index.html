@@ -5,18 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Cytoscape.js Layout Demo</title>
+    <title>DeTangle - Gene Regulatory Network Prediction</title>
 
     <!-- Bootstrap -->
     <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
-    <link rel="stylesheet" href="css/bootswatch/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
-    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="css/cytoscape.js-panzoom.css">
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
-    <link href="css/my-style.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/bootswatch/cerulean/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="libs/cytoscape/css/cytoscape.js-panzoom.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="libs/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <link rel="stylesheet" href="libs/bootstrap-slider/css/bootstrap-slider.min.css"/>
+    <link rel="stylesheet" href="css/my-style.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -153,9 +154,10 @@
         </div>
 
         <div class="col-xs-4">
-          <label class="control-label" for="weightCutoffSlider">Weight Cut-off:</label>
-            <input id="weightCutoffSlider" type="text" class="span2"
-            data-slider-min="0" data-slider-max="1" data-slider-step="0.02" data-slider-value="0.01"/> 
+          <label class="control-label" for="weightCutoffSlider">Edge Cut-off &nbsp;</label>
+            <input id="weightCutoffSlider" data-provide="bootstrapSlider" type="text" 
+                    class="span2" data-slider-handle="square" data-slider-min="0" 
+                    data-slider-max="1" data-slider-step="0.02" data-slider-value="0.01"/> 
         </div>
         
         <div class="pull-right">                
@@ -874,25 +876,26 @@
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
 <!-- VIEW SCRIPTS -->
-<script src="js/view_scripts/jquery-1.12.4.min.js"></script>
-<script src="js/view_scripts/jquery-ui.min.js"></script>
-<script src="js/view_scripts/bootstrap.min.js"></script>
-<script src="js/view_scripts/underscore-min.js"></script>
-<script src="js/view_scripts/backbone-min.js"></script>
-<script src="js/view_scripts/bootstrap-colorpicker.min.js"></script>
+<script src="libs/jquery/jquery-1.12.4.min.js"></script>
+<script src="libs/jquery/jquery-ui.min.js"></script>
+<script src="libs/bootstrap/bootstrap.min.js"></script>
+<script src="libs/underscore/underscore-min.js"></script>
+<script src="libs/backbone/backbone-min.js"></script>
+<script src="libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js"></script>
+<script src="libs/bootstrap-slider/bootstrap-slider.min.js"></script>
 
 <!-- CYTOSCAPE & EXTENSIONS -->
 <script src="js/main.js"></script>
-<script src="js/cytoscape/cytoscape.min.js"></script>
-<script src="js/cytoscape/extensions/ui/cytoscape-panzoom.js"></script>
-<script src="js/cytoscape/extensions/ui/cytoscape-undo-redo.js"></script>
-<script src="js/cytoscape/extensions/layout/cytoscape-cose-bilkent.js"></script>
-<script src="js/cytoscape/extensions/layout/arbor.js"></script>
-<script src="js/cytoscape/extensions/layout/cytoscape-arbor.js"></script>
+<script src="libs/cytoscape/cytoscape.min.js"></script>
+<script src="libs/cytoscape/extensions/ui/cytoscape-panzoom.js"></script>
+<script src="libs/cytoscape/extensions/ui/cytoscape-undo-redo.js"></script>
+<script src="libs/cytoscape/extensions/layout/cytoscape-cose-bilkent.js"></script>
+<script src="libs/cytoscape/extensions/layout/arbor.js"></script>
+<script src="libs/cytoscape/extensions/layout/cytoscape-arbor.js"></script>
 <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
-<script src="js/cytoscape/extensions/layout/cytoscape-cola.js"></script>
+<script src="libs/cytoscape/extensions/layout/cytoscape-cola.js"></script>
 <script src="https://cdn.rawgit.com/dhotson/springy/2.7.1/springy.js"></script>
-<script src="js/cytoscape/extensions/layout/cytoscape-springy.js"></script>
+<script src="libs/cytoscape/extensions/layout/cytoscape-springy.js"></script>
 
 <!-- CUSTOMS FOR DEMO -->
 <script src="js/utils.add-remove.js"></script>
