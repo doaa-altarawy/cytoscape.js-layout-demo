@@ -56,8 +56,8 @@
                             <li><a id="sample5" href="#">Sample 5</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a id="save-file" href="#">Save</a></li>
+                    <li><a id="save-file-xml" href="#">Save (graphXML)</a></li>
+                    <li><a id="save-file-json" href="#">Save (JSON)</a></li>
                     <li class="divider"></li>
                     <li>
                         <a id="save-as-png" href="#">Save as PNG</a>
@@ -130,21 +130,23 @@
     <div style="margin-top: 10px;" class="row">
         <div class="btn-group col-xs-6">                    
             <div class="btn-group">
-                <a href="#" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown">
-                    Add Edge <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
+                <a id="addEdge-btn" href="#" class="btn btn-sm btn-warning">Add Edge</a>
+                    <!-- <a id="addEdge-btn" href="#" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown">
+                        Add Edge <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
                         <li><a href="#" onclick="changeBond(1)">Low</a></li>
                         <li><a href="#" onclick="changeBond(3)">High</a></li>
-                    </ul>                        
+                    </ul>    -->                     
              </div>  
 
-             <a href="#" class="btn btn-sm btn-danger">Delete Edge</a>
+             <a id="delete-btn" href="#" class="btn btn-sm btn-danger">Delete Edge</a>
 
             <div class="col-xs-5">
                 <div class="input-group">
                   <span class="input-group-btn">
-                    <input type="text" class="form-control input-sm" placeholder="Include genes...">
-                    <button class="btn btn-sm btn-info" type="button">Show</button>
+                    <input id="showNode-txt" type="text" class="form-control input-sm" 
+                            placeholder="Genes to include (comma separated)..">
+                    <button id="showNode-btn" class="btn btn-sm btn-info" type="button">Show</button>
                   </span>
                 </div>
             </div>

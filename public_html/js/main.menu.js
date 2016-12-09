@@ -26,7 +26,7 @@ $("#redo").click(function (e) {
     ur.redo();
 });
 
-$("#delete").click(function (e) {
+$("#delete,#delete-btn").click(function (e) {
     var selectedEles = cy.$(":selected");
 
     if(selectedEles.length == 0){
@@ -35,14 +35,14 @@ $("#delete").click(function (e) {
     ur.do("remove", selectedEles);
 });
 
-$("#addEdge").click(function (e) {
+$("#addEdge,#addEdge-btn").click(function (e) {
 
     if(cy.$("node:selected").length == 2)
         ur.do("add", {
             group: "edges",
             data: {
-                source: cy.$("node:selected")[0].data('id'),
-                target: cy.$("node:selected")[1].data('id')
+                source: cy.$("node:selected")[1].data('id'),
+                target: cy.$("node:selected")[0].data('id')
             }
         });
 });
@@ -60,6 +60,14 @@ var getSelectedNodesForExpandCollapse = function(){
     return selectedNodes;
 
 }
+
+$("#showNode-btn").click(function (e){
+    var text = $("#showNode-txt").val();
+    if (text != ""){
+        console.log("Genes to show: " + text);
+    }
+
+});
 
 $("#collapse-selected").click(function (e) {
     var nodes = getSelectedNodesForExpandCollapse().filter("[expanded-collapsed='expanded']");
@@ -113,14 +121,27 @@ $("#expand-all").click(function (e) {
 ///////////////////// LOAD & SAVE //////////////////////////////
 
 
-$("#save-file").click(function (e) {
+$("#save-file-xml").click(function (e) {
 
     var sbgnmlText = jsonToGraphml.createGraphml(atts);
 
     var blob = new Blob([sbgnmlText], {
         type: "text/plain;charset=utf-8;",
     });
-    var filename = "" + new Date().getTime() + ".graphml";;
+    var filename = "" + new Date().getTime() + ".graphml";
+    saveAs(blob, filename);
+
+});
+
+
+$("#save-file-json").click(function (e) {
+
+    var json = atts;
+
+    var blob = new Blob([json], {
+        type: "text/plain;charset=utf-8;",
+    });
+    var filename = "" + new Date().getTime() + ".json";
     saveAs(blob, filename);
 
 });
