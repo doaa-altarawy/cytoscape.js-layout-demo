@@ -169,3 +169,11 @@ i.shortcut {
 #fancybox-wrap {
     z-index : 4000 !important;
 }
+
+.custom-menu-item {
+   
+}
+
+.custom-context-menu {
+    border-radius: 5px !important;
+}
