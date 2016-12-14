@@ -9,29 +9,140 @@ $(function() {
         }
     });
 
-
-    // // Work around for a bug in displaying the toolip
-    // $('#weightCutoffSlider').bootstrapSlider().on('slide', function(e) {
-    //     var w = Math.round(e.value*100) / 100.0;
-    //     $('#weightCutoffSlider').bootstrapSlider('setValue', w);
-    // });
-
-    // // When weight cut off change, update the graph
-    // $('#weightCutoffSlider').bootstrapSlider().on('slide', function(e) {
-    //     var w = Math.round(e.value*100) / 100.0;
-    //     // refresh the graph with w
-    //     //updateEdges(w);
-    // });
-
 }) //done
 
+// ----------------------------------------------------
+
 // When weight cut off change, update the graph
-$('#weightCutoffSlider').on('slide', function(e) {
-    //var w = Math.round(e.value*100) / 100.0;
+$('#weightCutoffSlider').on('change', function(e) {
+    var w = Math.round(e.value.newValue*100) / 100.0;
+    console.log('Slider value:', w);
     // refresh the graph with w
     //updateEdges(w);
+    var toHide = cy.edges().filter(function(i, ele){
+        if (ele.data('label') && ele.data('label') <= w){
+            return true;
+        }else{
+            return false;
+        }
+    });
+
+    toHide.hide();
+    var others = cy.edges().difference(toHide);
+    others.show();
 
 });
+
+
+// ---------------------------------------------------------------
+
+$("#showNode-btn").click(function (e) {
+    var labels = $("#showNode-txt").val().toLowerCase();
+    labels = labels.split(/,|;| /).filter(function(el) {return el.length != 0});
+    console.log(labels);
+    // findAndHighlight(label, false);
+    showNode(labels, false);
+});
+
+$("#showNeigh-btn").click(function (e) {
+    var labels = $("#showNode-txt").val().toLowerCase();
+    labels = labels.split(/,|;| /).filter(function(el) {return el.length != 0});
+    console.log(labels);
+    showNode(labels, true);
+});
+
+
+$("#showNode-txt").keydown(function (e) {
+    if (e.which === 13) {
+        $("#showNode-btn").trigger('click');
+    }
+});
+
+// -------------------------------------------------------------
+var showNode = function(labels, withCloseNeighbors) {
+    if (labels.length == 0) {
+        return;
+    }
+ 
+    var myNodes = cy.nodes(); //cy.nodes(":hidden");
+
+    console.log('Num of hidden: ', cy.nodes(":hidden").length);
+    console.log(cy.nodes(":hidden"));
+    var nodesToShow = myNodes.filter(function (i, ele) {
+        for (var j=0; j<labels.length; j++){
+            if (ele.data("name") && ele.data("name").toLowerCase().indexOf(labels[j]) >= 0) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    if (nodesToShow.length == 0) {
+        return;
+    }
+
+    nodesToShow.show().highlight();
+
+    if (withCloseNeighbors){
+        nodesToShow.closedNeighborhood().show().nodes().highlight();
+    }
+    // working
+    // var queryNodes = cy.elements('node').search(label);
+    // queryNodes.highlight();
+    // // var nodes = cy.elements("node.highlighted").highlightNeighbors();
+    // queryNodes.add(queryNodes.descendants()).closedNeighborhood().highlight();
+    //-----
+
+    // console.log(nodes);
+    
+
+};
+
+// ------------------------------------------------------------
+
+function findAndHighlight(label, isHighlightNeighbors){
+    
+    if (label.length == 0) {
+        return;
+    }
+
+    var myNodes = cy.nodes(":visible");
+    var nodesToHighlight = myNodes.filter(function (i, ele) {
+        if (ele.data("name") && ele.data("name").toLowerCase().indexOf(label) >= 0) {
+            return true;
+        }
+        return false;
+    });
+
+    if (nodesToHighlight.length == 0) {
+        return;
+    }
+
+    nodesToHighlight.highlight();
+    if (isHighlightNeighbors){
+        nodesToHighlight.closedNeighborhood().highlight(); 
+    }
+}
+
+// ------------------------------------------------------------
+
+function playground(){
+    var others = cy.elements().difference(eles.union(eles.ancestors()));
+    queryNodes.add(queryNodes.descendants()).closedNeighborhood().highlight();
+
+
+
+    var myNodes = cy.nodes(":visible");
+    var nodesToHighlight = myNodes.filter(function (i, ele) {
+        if (ele.data("name") && ele.data("name").toLowerCase().indexOf(label) >= 0) {
+            return true;
+        }
+        return false;
+    });
+    var data = nodesToHighlight[0].data();
+
+}
+// ------------------------------------------------------
 
 var refreshUndoRedoButtonsStatus = function(){
 
@@ -84,6 +195,42 @@ $("#addEdge,#addEdge-btn").click(function (e) {
 
 ///////////////////// VIEW ////////////////////////////
 
+var showHideEdgeConfindence = function(show){
+
+
+}
+
+$('#show-edge-label').click(function(e){
+    // Toggle checkbox
+    $('#show-edge-label-chk').prop('checked', !$('#show-edge-label-chk').prop('checked'));
+
+    showHideEdgeConfindence($('#show-edge-label-chk').prop('checked'))
+});
+
+$('#show-edge-label-chk').click(function(e){
+    // prevent defaut check on clicking the checkbox
+    // event is handled in the menu item link
+    e.preventDefault();
+    var _this = this;       
+    setTimeout(function() { 
+        _this.checked = !_this.checked; 
+    }, 1);        
+});
+
+// ----------------------------------------------------------
+
+$('#hideAllExceptHigh').click(function(e){
+
+    cy.nodes().hide();
+    cy.nodes(":selected").show().closedNeighborhood().show();
+    cy.nodes(".highlighted").show().closedNeighborhood().show();
+});
+
+$('#hideAllExceptHigh_btn').click(function(){
+    $('#hideAllExceptHigh').trigger('click');
+});
+
+// ------------------------------------------------------------
 var getSelectedNodesForExpandCollapse = function(){
 
     var selectedNodes = cy.nodes(":selected");
@@ -96,14 +243,14 @@ var getSelectedNodesForExpandCollapse = function(){
 
 }
 
-// TODO: Include selected genes, comma separated
-$("#showNode-btn").click(function (e){
-    var text = $("#showNode-txt").val();
-    if (text != ""){
-        console.log("Genes to show: " + text);
-    }
+// // TODO: Include selected genes, comma separated
+// $("#showNode-btn").click(function (e){
+//     var text = $("#showNode-txt").val();
+//     if (text != ""){
+//         console.log("Genes to show: " + text);
+//     }
 
-});
+// });
 
 $("#collapse-selected").click(function (e) {
     var nodes = getSelectedNodesForExpandCollapse().filter("[expanded-collapsed='expanded']");
@@ -172,8 +319,9 @@ $("#save-file-xml").click(function (e) {
 
 $("#save-file-json").click(function (e) {
 
-    var json = atts;
-
+    // var json = atts;
+    var json = cy.json()
+    console.log(json);
     var blob = new Blob([json], {
         type: "text/plain;charset=utf-8;",
     });
@@ -190,26 +338,31 @@ $("#cose-bilkent").click( function (e) {
     tempName = "cose-bilkent";
     whitenBackgrounds();
     $("#cose-bilkent").css("background-color", "grey");
+    performLayout();
 });
 $("#cose").click( function (e) {
     tempName = "cose";
     whitenBackgrounds();
     $("#cose").css("background-color", "grey");
+    performLayout();
 });
 $("#cola").click( function (e) {
     tempName = "cola";
     whitenBackgrounds();
     $("#cola").css("background-color", "grey");
+    performLayout();
 });
 $("#springy").click( function (e) {
     tempName = "springy";
     whitenBackgrounds();
     $("#springy").css("background-color", "grey");
+    performLayout();
 });
 $("#arbor").click( function (e) {
     tempName = "arbor";
     whitenBackgrounds();
     $("#arbor").css("background-color", "grey");
+    performLayout();
 });
 
 var coseBilkentLayoutProp = new COSEBilkentLayout({
@@ -462,33 +615,11 @@ $("#layout-properties").click(function (e) {
 
 });
 
-$("#perform-layout").click(function (e) {
-    cy.layout().stop();
-    cy.nodes().removeData("ports");
-    cy.edges().removeData("portsource");
-    cy.edges().removeData("porttarget");
 
-    cy.nodes().data("ports", []);
-    cy.edges().data("portsource", []);
-    cy.edges().data("porttarget", []);
-    switch (tempName) {
-        case 'cose-bilkent':
-            coseBilkentLayoutProp.applyLayout();
-            break;
-        case 'cose':
-            coseLayoutProp.applyLayout();
-            break;
-        case 'cola':
-            colaLayoutProp.applyLayout();
-            break;
-        case 'arbor':
-            arborLayoutProp.applyLayout();
-            break;
-        case 'springy':
-            springyLayoutProp.applyLayout();
-            break;
-    }
+$("#perform-layout").click(function (e) {
+    performLayout();
 });
+
 var atts;
 
 $("body").on("change", "#file-input", function (e) {
@@ -564,7 +695,6 @@ $("#save-as-png").click(function(evt){
 });
 
 
-
 var loadSample = function(fileName){
     var xmlObject = loadXMLDoc("samples/" + fileName + ".xml");
     var graphmlConverter = graphmlToJSON(xmlObject);
@@ -574,6 +704,8 @@ var loadSample = function(fileName){
         edges: graphmlConverter.objects[2],
         nodes: graphmlConverter.objects[1]
     };
+    console.log(cytoscapeJsGraph);
+
     refreshCytoscape(cytoscapeJsGraph);
     setFileContent(fileName + ".graphml");
 };

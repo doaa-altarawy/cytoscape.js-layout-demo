@@ -18,35 +18,25 @@ $(function () {
         nodes: graphmlConverter.objects[1]
     };
     refreshCytoscape(cytoscapeJsGraph);
-    setFileContent("graph0.graphml");
-
-
-    var panProps = ({
-        zoomFactor: 0.05, // zoom factor per zoom tick
-        zoomDelay: 45, // how many ms between zoom ticks
-        minZoom: 0.1, // min zoom level
-        maxZoom: 10, // max zoom level
-        fitPadding: 50, // padding when fitting
-        panSpeed: 10, // how many ms in between pan ticks
-        panDistance: 10, // max pan distance per tick
-        panDragAreaSize: 75, // the length of the pan drag box in which the vector for panning is calculated (bigger = finer control of pan speed and direction)
-        panMinPercentSpeed: 0.25, // the slowest speed we can pan by (as a percent of panSpeed)
-        panInactiveArea: 3, // radius of inactive area in pan drag box
-        panIndicatorMinOpacity: 0.5, // min opacity of pan indicator (the draggable nib); scales from this to 1.0
-        autodisableForMobile: true, // disable the panzoom completely for mobile (since we don't really need it with gestures like pinch to zoom)
-
-        // icon class names
-        sliderHandleIcon: 'fa fa-minus',
-        zoomInIcon: 'fa fa-plus',
-        zoomOutIcon: 'fa fa-minus',
-        resetIcon: 'fa fa-expand'    });
-    cy.panzoom(panProps);
+    setFileContent("graph0.graphml");    
 
 });
+
 $("#cose-bilkent").css("background-color", "grey");
 
 function refreshCytoscape(graphData) { // on dom ready
 
+    //---------- Add custom styling in graphData:
+    var layout = {name: 'preset', fit: true};
+    if (graphData.hasOwnProperty('layout')){
+        layout = graphData.layout;    
+    }
+
+    if (cy.hasOwnProperty('destroy')){
+        console.log('destroying cy instance');
+        cy.destroy();    
+    }
+    
     cy = cytoscape({
         container: $('#cy')[0],
         style: [
@@ -58,7 +48,8 @@ function refreshCytoscape(graphData) { // on dom ready
                     'color': 'white',
                     'text-outline-width': 2,
                     'text-outline-color': '#888',
-                    'shape': 'rectangle'
+                    'shape': 'rectangle',
+                    'background-color': '#6495ed'//rgb(174, 199, 232)
                 }
             },
             {
@@ -67,7 +58,6 @@ function refreshCytoscape(graphData) { // on dom ready
                     'background-color': 'black',
                     'line-color': 'black',
                     'target-arrow-color': 'black',
-                    'source-arrow-color': 'black',
                     'text-outline-color': 'black',
                     'border-color': 'black',
                     'border-width': 5
@@ -83,13 +73,22 @@ function refreshCytoscape(graphData) { // on dom ready
             {
                 selector: 'edge',
                 style: {
-                    'target-arrow-shape': 'triangle',
-                    'background-color': 'black',
-                    'line-color': 'black',
-                    'target-arrow-color': 'black',
+                    // label
+                    'label': 'data(label)',
+                    'text-valign': 'top',
+                    'text-margin-y': -10,
+                    'text-rotation': 'autorotate',
+                    // 'text-outline-color': 'gray',
+                    'color': 'gray',
+                    // edge body
+                    'target-arrow-shape': 'triangle', //'tee'
+                    // 'background-color': 'black',
+                    'line-color': 'gray',
+                    'target-arrow-color': 'gray',
                     // 'target-arrow-color': 'red',
-                    'source-arrow-color': 'black',
-                    'text-outline-color': 'black',
+                    // 'source-arrow-color': 'black',
+                    'width': 1,
+                    //'line-style' : 'solid' //, 'dotted', 'dashed'
                     'curve-style': "bezier"
                 }
             },
@@ -97,13 +96,19 @@ function refreshCytoscape(graphData) { // on dom ready
                 selector: 'edge:selected',
                 style: {
                     'target-arrow-color': 'green',
-                    'background-color': 'green',
+                    // 'background-color': 'green',
                     'line-color': 'green',
-                    'width': 5,
+                    'width': 3,
                     'opacity':1,
                     'color' : 'green'
                 }
             },
+            // {
+            //     selector: 'node:highlighted',
+            //     style: {
+            //         'border-width': '10px'
+            //     }
+            // }
         ],
 
         elements: {
@@ -111,10 +116,10 @@ function refreshCytoscape(graphData) { // on dom ready
             edges: graphData['edges']
 
         },
-        layout: {
-            name: 'preset',
-            fit: true
-        },
+
+        layout: layout,
+        showLabels: true,
+        
         boxSelectionEnabled: true,
         motionBlur: true,
         wheelSensitivity: 0.1,
@@ -209,30 +214,13 @@ function refreshCytoscape(graphData) { // on dom ready
             });
         }
     });
-    var panProps = ({
-        zoomFactor: 0.05, // zoom factor per zoom tick
-        zoomDelay: 45, // how many ms between zoom ticks
-        minZoom: 0.1, // min zoom level
-        maxZoom: 10, // max zoom level
-        fitPadding: 50, // padding when fitting
-        panSpeed: 10, // how many ms in between pan ticks
-        panDistance: 10, // max pan distance per tick
-        panDragAreaSize: 75, // the length of the pan drag box in which the vector for panning is calculated (bigger = finer control of pan speed and direction)
-        panMinPercentSpeed: 0.25, // the slowest speed we can pan by (as a percent of panSpeed)
-        panInactiveArea: 8, // radius of inactive area in pan drag box
-        panIndicatorMinOpacity: 0.5, // min opacity of pan indicator (the draggable nib); scales from this to 1.0
-        autodisableForMobile: true, // disable the panzoom completely for mobile (since we don't really need it with gestures like pinch to zoom)
+    
+    addPanZoom();
+    addViewUtil();
+    addContextMenu();
 
-        // icon class names
-        sliderHandleIcon: 'fa fa-minus',
-        zoomInIcon: 'fa fa-plus',
-        zoomOutIcon: 'fa fa-minus',
-        resetIcon: 'fa fa-expand'    });
-    cy.panzoom(panProps);
-
-    ur = cy.undoRedo({
-
-    });
+    // Undo-redue handling
+    ur = cy.undoRedo();
 
     cy.on("undo", function (e, name) {
         refreshUndoRedoButtonsStatus();
@@ -246,9 +234,153 @@ function refreshCytoscape(graphData) { // on dom ready
 
     ur.action("addNode", addNode, removeNodes);
     ur.action("createCompound", createCompoundForSelectedNodes, removeCompound);
-}
-;
+};
 
+//-------------------------------------------------------------------
+
+function addViewUtil(){
+    cy.viewUtilities({
+        node: {
+            highlighted: {
+                'border-width': '5px',
+                'border-color': 'red'
+            }, // styles for when nodes are highlighted.
+            unhighlighted: {// styles for when nodes are unhighlighted.
+            'opacity': function (ele) {
+                    return ele.css('opacity');
+                } 
+            }           
+        },
+        edge: {
+            highlighted: {'width': '5px'}, 
+            unhighlighted: {
+                'opacity': function (ele) {return ele.css('opacity');}
+            }
+        },
+        searchBy: ["name"]
+      });
+}
+
+//-------------------------------------------------------------------
+
+function addContextMenu(){
+    var options = {
+    // List of initial menu items
+    menuItems: [      
+      {
+        id: 'highlight',
+        title: 'Highlight',
+        selector: 'node',
+        onClickFunction: function (event) {
+            event.cyTarget.highlight()
+        }
+      },
+      {
+        id: 'unhighlight',
+        title: 'Unhighlight',
+        selector: 'node',
+        hasTrailingDivider: true, // Whether the item will have a trailing divider
+        onClickFunction: function (event) {
+            event.cyTarget.unhighlight()
+        }
+      },
+      {
+        id: 'select',
+        title: 'Select',
+        selector: 'node',
+        hasTrailingDivider: true, 
+        onClickFunction: function (event) {
+            event.cyTarget.select();
+        }
+      },
+      {
+        id: 'hide', 
+        title: 'hide', 
+        selector: 'node', 
+        onClickFunction: function (event) {
+            event.cyTarget.hide();
+        }
+      },
+      {
+        id: 'delete', // ID of menu item
+        title: 'Delete', // Title of menu item
+        // If the selector is not truthy no elements will have this menu item on cxttap
+        disabled: false, // Whether the item will be created as disabled
+        show: true, // Whether the item will be shown or not
+        // hasTrailingDivider: true, // Whether the item will have a trailing divider
+        // Filters the elements to have this menu item on cxttap
+        selector: 'edge', 
+        onClickFunction: function (event) { // The function to be executed on click
+            event.cyTarget.remove();
+        }
+      },
+      {
+        id: 'unhighlightAll',
+        title: 'Unhighlight All',
+        selector: '',
+        hasTrailingDivider: true, 
+        coreAsWell: true,
+        onClickFunction: function (event) {
+            cy.nodes().unhighlight();
+        }
+     }, 
+     {
+        id: 'geneBank',
+        title: 'Open GeneBank',
+        selector: 'node',
+        hasTrailingDivider: true, 
+        onClickFunction: function (event) {
+            var url = "https://www.ncbi.nlm.nih.gov/gene/?term=" + event.cyTarget.data('name');
+            window.open(url,'_blank');
+        }
+     },
+     {
+        id: 'showGeneExpr',
+        title: 'Gene expression for highlighted',
+        selector: '',
+        hasTrailingDivider: true,
+        coreAsWell: true,
+        onClickFunction: function (event) {
+            $('#show-gene-expr').trigger('click');
+        }
+      }
+    ],
+    // css classes that menu items will have
+    menuItemClasses: ['custom-menu-item'],
+    contextMenuClasses: ['custom-context-menu']
+   };
+
+    cy.contextMenus( options );
+}
+
+//-----------------------------------------------------------------
+
+function addPanZoom(){
+    var panProps = ({
+        zoomFactor: 0.05, // zoom factor per zoom tick
+        zoomDelay: 45, // how many ms between zoom ticks
+        minZoom: 0.1, // min zoom level
+        maxZoom: 10, // max zoom level
+        fitPadding: 50, // padding when fitting
+        panSpeed: 10, // how many ms in between pan ticks
+        panDistance: 10, // max pan distance per tick
+        panDragAreaSize: 75, // the length of the pan drag box in which the vector for panning is calculated (bigger = finer control of pan speed and direction)
+        panMinPercentSpeed: 0.25, // the slowest speed we can pan by (as a percent of panSpeed)
+        panInactiveArea: 3, // radius of inactive area in pan drag box
+        panIndicatorMinOpacity: 0.5, // min opacity of pan indicator (the draggable nib); scales from this to 1.0
+        autodisableForMobile: true, // disable the panzoom completely for mobile (since we don't really need it with gestures like pinch to zoom)
+
+        // icon class names
+        sliderHandleIcon: 'fa fa-minus',
+        zoomInIcon: 'fa fa-plus',
+        zoomOutIcon: 'fa fa-minus',
+        resetIcon: 'fa fa-expand'    
+    });
+
+    cy.panzoom(panProps);
+}
+
+// -----------------------------------------------------------------
 
 var COSEBilkentLayout = Backbone.View.extend({
     defaultLayoutProperties: {
@@ -695,3 +827,31 @@ var whitenBackgrounds = function(){
     $("#springy").css("background-color", "white");
     $("#arbor").css("background-color", "white");
 };
+
+function performLayout(){
+    cy.layout().stop();
+    cy.nodes().removeData("ports");
+    cy.edges().removeData("portsource");
+    cy.edges().removeData("porttarget");
+
+    cy.nodes().data("ports", []);
+    cy.edges().data("portsource", []);
+    cy.edges().data("porttarget", []);
+    switch (tempName) {
+        case 'cose-bilkent':
+            coseBilkentLayoutProp.applyLayout();
+            break;
+        case 'cose':
+            coseLayoutProp.applyLayout();
+            break;
+        case 'cola':
+            colaLayoutProp.applyLayout();
+            break;
+        case 'arbor':
+            arborLayoutProp.applyLayout();
+            break;
+        case 'springy':
+            springyLayoutProp.applyLayout();
+            break;
+    } 
+}

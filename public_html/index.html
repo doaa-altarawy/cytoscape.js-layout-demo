@@ -5,19 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>DeTangle - Gene Regulatory Network Prediction</title>
+    <title>DeTangle - Interactive Gene Regulatory Network Prediction</title>
 
     <!-- Bootstrap -->
     <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
-    <link rel="stylesheet" href="libs/bootswatch/cerulean/bootstrap.min.css">
-    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.structure.min.css">
-    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="libs/cytoscape/css/cytoscape.js-panzoom.css">
+    <link rel="stylesheet" href="libs/bootswatch/cerulean/bootstrap.min.css"/>
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.structure.min.css"/>
+    <link rel="stylesheet" href="libs/jquery/css/jquery-ui.theme.min.css"/>
+    <link rel="stylesheet" href="libs/cytoscape/css/cytoscape.js-panzoom.css"/>
+    <link rel="stylesheet" href="libs/cytoscape/css/cytoscape-context-menus.css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="libs/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <link rel="stylesheet" href="libs/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css"/>
     <link rel="stylesheet" href="libs/bootstrap-slider/css/bootstrap-slider.min.css"/>
-    <link rel="stylesheet" href="css/my-style.css">
+    <link rel="stylesheet" href="css/my-style.css"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -31,7 +32,7 @@
 <div class="navbar-sm navbar-inverse container" style="width:85%">
    
     <div class="navbar-header">
-        <a href="./" class="navbar-brand">DeTangle</a>
+        <a href="#" class="navbar-brand">DeTangle</a>
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main"/>
     </div>
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -41,7 +42,7 @@
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">File <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a id="new" href="#">New</a> </li>
+                    <!-- <li><a id="new" href="#">New</a> </li> -->
                     <li><input id="file-input" type="file" style="display:none" />
                         <a href="#" type="file" id="load-file">Load ...</a></li>
                     <li class="dropdown">
@@ -71,7 +72,7 @@
                     <li><a id="makeCompound" href="#">Add Compound For Selected</a></li>
                     <li><a id="addEdge" href="#">Add Edge Between Selected</a></li>
                     <li class="divider"></li>
-                    <li><a id="delete" href="#">Delete Selected <i class="shortcut"> (DEL)</i> </a></li>
+                    <li><a id="delete" href="#">Delete Selected</a></li>
                     <li class="divider"></li>
                     <li class="disabled"><a id="undo" href="#">Undo <i class="shortcut"> (CTRL + Z)</i> </a></li>
                     <li class="disabled"><a id="redo" href="#">Redo <i class="shortcut"> (CTRL + Y)</i> </a></li>
@@ -80,6 +81,12 @@
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">View <b class="caret"></b></a>
                 <ul class="dropdown-menu">
+                    <li>
+                        <a id="show-edge-label" href="#">
+                        <input id="show-edge-label-chk" type="checkbox"> Show Edge Confindence</a>
+                    </li>
+                    <li><a id='hideAllExceptHigh' href="#">Hide all expect highlighted</a></li>
+                    <li class="divider"></li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Collapse / Expand
                             <b class="right-caret"></b>
@@ -92,6 +99,8 @@
                             <li><a id="expand-all" href="#">Expand All</a></li>
                         </ul>
                     </li>
+                    <li class="divider"></li>
+                    <li><a id = "#show-gene-expr" href="#">Show Gene expression for highlighted</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -113,6 +122,15 @@
                     <li><a id = "perform-layout" href="#">Perform Layout</a></li>
                     <li><a id = "layout-properties" href="#">Layout Properties ...</a></li>
                 </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="runMenu">Run<span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="runMenu">
+                    <!--<li><a tabindex="-1" href="runTest">Run Test</a></li>
+                    <li><a tabindex="-1" href="#" data-toggle="modal" data-target="#myModal" data-backdrop="static">Run Test 2</a></li>-->
+                    <li><a id='runAutoTest' tabindex="-1" href="#">Run automated Test</a></li>
+                    <li><a id='loadGraphDialog' tabindex="-1" href="#">Display Tests Graph</a></li>
+              </ul>
             </li>
             <li class="dropdown">
                 <a href="#" data-toggle="modal" data-target="#quick-help-template">
@@ -142,12 +160,19 @@
 
              <a id="delete-btn" href="#" class="btn btn-sm btn-danger">Delete Edge</a>
 
-            <div class="col-xs-5">
+            <div class="col-xs-6">
                 <div class="input-group">
-                  <span class="input-group-btn">
-                    <input id="showNode-txt" type="text" class="form-control input-sm" 
+                <input id="showNode-txt" type="text" class="form-control input-sm" 
                             placeholder="Genes to include (comma separated)..">
-                    <button id="showNode-btn" class="btn btn-sm btn-info" type="button">Show</button>
+                  <span class="input-group-btn">                    
+                    <a id="showNode-btn" href='#' class="btn btn-sm btn-info">Show</a>
+                    <a href="#" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><span class="caret"></span></a>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a id='showNeigh-btn' href="#">Show neighboors</a></li>
+                            <li><a href="#">Other options</a></li>
+                            <li class="divider"></li>
+                            <li><a id='hideAllExceptHigh_btn' href="#">Hide all expect highlighted</a></li>
+                          </ul>
                   </span>
                 </div>
             </div>
@@ -156,8 +181,8 @@
         <div class="col-xs-4">
           <label class="control-label" for="weightCutoffSlider">Edge Cut-off &nbsp;</label>
             <input id="weightCutoffSlider" data-provide="bootstrapSlider" type="text" 
-                    class="span2" data-slider-handle="square" data-slider-min="0" 
-                    data-slider-max="1" data-slider-step="0.02" data-slider-value="0.01"/> 
+                    class="span2" data-slider-min="0" 
+                    data-slider-max="1" data-slider-step="0.02" data-slider-value="0"/> 
         </div>
         
         <div class="pull-right">                
@@ -181,9 +206,11 @@
     </div>
 </div>
 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Form Holder div ~~~~~~~~~~~~~~~~~~~~~~ -->
 
+<div id='formHolder'></div>
 
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Modals ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Modals ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <div id="quick-help-template" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -892,10 +919,12 @@
 <script src="libs/cytoscape/extensions/layout/cytoscape-cose-bilkent.js"></script>
 <script src="libs/cytoscape/extensions/layout/arbor.js"></script>
 <script src="libs/cytoscape/extensions/layout/cytoscape-arbor.js"></script>
-<script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
+<script src="libs/cytoscape/extensions/layout/cola.v3.min.js"></script>
 <script src="libs/cytoscape/extensions/layout/cytoscape-cola.js"></script>
 <script src="https://cdn.rawgit.com/dhotson/springy/2.7.1/springy.js"></script>
 <script src="libs/cytoscape/extensions/layout/cytoscape-springy.js"></script>
+<script src="libs/cytoscape/extensions/api/cytoscape-view-utilities.js"></script>
+<script src="libs/cytoscape/extensions/api/cytoscape-context-menus.js"></script>
 
 <!-- CUSTOMS FOR DEMO -->
 <script src="js/utils.add-remove.js"></script>
@@ -907,6 +936,8 @@
 <script src="js/EditorActionsManager.js"></script>
 <script src="js/IDGenerator.js"></script>
 <script src="js/FileSaver.js"></script>
+<script src="js/serverAPIs.js"></script>
 <script src="js/main.menu.js"></script>
+
 </body>
 </html>
