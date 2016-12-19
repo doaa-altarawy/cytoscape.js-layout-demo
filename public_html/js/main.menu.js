@@ -13,6 +13,14 @@ $(function() {
 
 // ----------------------------------------------------
 
+function initDisplay(){
+     $("#showNode-txt").val('');
+     $('#weightCutoffSlider').value('0'); ///////////////////////
+     $('#hide-edge-label-chk').prop('checked', false);
+}
+
+// ----------------------------------------------------
+
 // When weight cut off change, update the graph
 $('#weightCutoffSlider').on('change', function(e) {
     var w = Math.round(e.value.newValue*100) / 100.0;
@@ -42,6 +50,7 @@ $("#showNode-btn").click(function (e) {
     console.log(labels);
     // findAndHighlight(label, false);
     showNode(labels, false);
+    $("#showNode-txt").val('');
 });
 
 $("#showNeigh-btn").click(function (e) {
@@ -49,6 +58,7 @@ $("#showNeigh-btn").click(function (e) {
     labels = labels.split(/,|;| /).filter(function(el) {return el.length != 0});
     console.log(labels);
     showNode(labels, true);
+    $("#showNode-txt").val('');
 });
 
 
@@ -173,7 +183,7 @@ $("#redo").click(function (e) {
 });
 
 $("#delete,#delete-btn").click(function (e) {
-    var selectedEles = cy.$(":selected");
+    var selectedEles = cy.$("edge:selected");
 
     if(selectedEles.length == 0){
         return;
@@ -195,19 +205,29 @@ $("#addEdge,#addEdge-btn").click(function (e) {
 
 ///////////////////// VIEW ////////////////////////////
 
-var showHideEdgeConfindence = function(show){
+var hideEdgeConfindence = function(hide){
+    // console.log('Hideee:', hide);
 
-
+    cy.edges().forEach(function(edge){
+        if (hide){
+            edge.removeClass('hideEdgeLabel')  
+        } else{
+            edge.addClass('hideEdgeLabel');
+        }            
+    });
+    
 }
 
-$('#show-edge-label').click(function(e){
+$('#hide-edge-label').click(function(e){
+    // console.log('linkkk');
     // Toggle checkbox
-    $('#show-edge-label-chk').prop('checked', !$('#show-edge-label-chk').prop('checked'));
+    $('#hide-edge-label-chk').prop('checked', !$('#hide-edge-label-chk').prop('checked'));
 
-    showHideEdgeConfindence($('#show-edge-label-chk').prop('checked'))
+    hideEdgeConfindence($('#hide-edge-label-chk').prop('checked'))
 });
 
-$('#show-edge-label-chk').click(function(e){
+$('#hide-edge-label-chk').click(function(e){
+    // console.log('checkkkk');
     // prevent defaut check on clicking the checkbox
     // event is handled in the menu item link
     e.preventDefault();
@@ -228,6 +248,12 @@ $('#hideAllExceptHigh').click(function(e){
 
 $('#hideAllExceptHigh_btn').click(function(){
     $('#hideAllExceptHigh').trigger('click');
+});
+
+// -----------------------------------------------------------
+
+$('#showAllNodes').click(function(e){
+    cy.nodes().show();
 });
 
 // ------------------------------------------------------------

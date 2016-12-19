@@ -76,7 +76,7 @@ function refreshCytoscape(graphData) { // on dom ready
                     // label
                     'label': 'data(label)',
                     'text-valign': 'top',
-                    'text-margin-y': -10,
+                    'text-margin-y': -12,
                     'text-rotation': 'autorotate',
                     // 'text-outline-color': 'gray',
                     'color': 'gray',
@@ -103,12 +103,24 @@ function refreshCytoscape(graphData) { // on dom ready
                     'color' : 'green'
                 }
             },
+            {
+                selector: 'edge.hideEdgeLabel',
+                style: {                   
+                    'color': '#fff'                    
+                }
+            }, 
             // {
-            //     selector: 'node:highlighted',
+            //     selector: 'edge[label > 0.5]',
             //     style: {
-            //         'border-width': '10px'
+            //         'line-color': 'red'
             //     }
-            // }
+            // },
+            {
+                selector: 'edge[label < 0]', // inhibitor edge
+                style: {
+                    'target-arrow-shape': 'tee'
+                }
+            }            
         ],
 
         elements: {
@@ -118,7 +130,6 @@ function refreshCytoscape(graphData) { // on dom ready
         },
 
         layout: layout,
-        showLabels: true,
         
         boxSelectionEnabled: true,
         motionBlur: true,
@@ -150,20 +161,20 @@ function refreshCytoscape(graphData) { // on dom ready
                 return nodesData;
             };
 
-            var enableDragAndDropMode = function () {
-                window.dragAndDropModeEnabled = true;
-                $("#sbgn-network-container").addClass("target-cursor");
-                cy.autolock(true);
-                cy.autounselectify(true);
-            };
+            // var enableDragAndDropMode = function () {
+            //     window.dragAndDropModeEnabled = true;
+            //     $("#sbgn-network-container").addClass("target-cursor");
+            //     cy.autolock(true);
+            //     cy.autounselectify(true);
+            // };
 
-            var disableDragAndDropMode = function () {
-                window.dragAndDropModeEnabled = null;
-                window.nodeToDragAndDrop = null;
-                $("#sbgn-network-container").removeClass("target-cursor");
-                cy.autolock(false);
-                cy.autounselectify(false);
-            };
+            // var disableDragAndDropMode = function () {
+            //     window.dragAndDropModeEnabled = null;
+            //     window.nodeToDragAndDrop = null;
+            //     $("#sbgn-network-container").removeClass("target-cursor");
+            //     cy.autolock(false);
+            //     cy.autounselectify(false);
+            // };
 
             var lastMouseDownNodeInfo = null;
             this.on("mousedown", "node", function () {
@@ -298,6 +309,7 @@ function addContextMenu(){
         title: 'hide', 
         selector: 'node', 
         onClickFunction: function (event) {
+            event.cyTarget.unhighlight();
             event.cyTarget.hide();
         }
       },
@@ -440,6 +452,7 @@ var COSEBilkentLayout = Backbone.View.extend({
         for (var prop in this.currentLayoutProperties) {
             options[prop] = this.currentLayoutProperties[prop];
         }
+        console.log(options);
         cy.layout(options);
     },
     render: function () {
@@ -525,6 +538,7 @@ var COSELayout = Backbone.View.extend({
         for (var prop in this.currentLayoutProperties) {
             options[prop] = this.currentLayoutProperties[prop];
         }
+        console.log(options);
         cy.layout(options);
     },
     render: function () {
@@ -623,6 +637,7 @@ var COLALayout = Backbone.View.extend({
             options[prop] = this.currentLayoutProperties[prop];
         }
 //        var options = clone(this.currentLayoutProperties);
+        console.log(options);
         cy.layout(options);
     },
     render: function () {
